@@ -27,11 +27,18 @@ if main_menu == 'Wyświetl całą tabelę':
 
 
 if main_menu == 'Wprowadź wyniki przeprowadzonej gry':    
-    data = st.date_input('Na początku podaj datę rozgrywki')
+    data = st.date_input('Na początku podaj datę rozgrywki')    
+    new_or_old_game = st.radio('No i rodzaj gry',('Istniejąca gra','Nowa gra'))
+
+    if new_or_old_game == 'Istniejąca gra':
+        game = st.multiselect('Kliknij, aby wybrać grę')
+    else:
+        game = st.text_input('Kliknij, aby wpisać nową grę')
+        
     number_of_players = st.number_input('Wprowadź liczbę graczy, którzy grali', min_value = 1, step=1)
 
     for i in range(int(number_of_players)):
         new_or_old_player = st.radio('Wprowadź ID gracza (3 pierwsze litery imienia i nazwiska)',('Istniejący gracz','Nowy gracz'))
 
         if new_or_old_player == 'Istniejący gracz':
-            player = st.multiselect('Kliknij, aby wybrać gracza',df.columns)
+            player = st.multiselect('Kliknij, aby wybrać gracza',df.columns[1:])
