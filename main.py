@@ -21,7 +21,7 @@ df = pd.read_csv('board_df.csv')
 
 
 main_menu = st.radio('Co chcesz zrobić?', ('Wyświetl całą tabelę','Wprowadź wyniki przeprowadzonej gry'))
-
+st.write(list(df.columns[1:]))
 if main_menu == 'Wyświetl całą tabelę':
     st.write(df)
 
