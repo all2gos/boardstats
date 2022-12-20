@@ -30,7 +30,7 @@ if main_menu == 'Wprowadź wyniki przeprowadzonej gry':
     new_or_old_game = st.radio('No i rodzaj gry',('Istniejąca gra','Nowa gra'))
 
     if new_or_old_game == 'Istniejąca gra':
-        game = st.multiselect('Kliknij, aby wybrać grę', list(df['game_info'][0].unique()))
+        game = st.multiselect('Kliknij, aby wybrać grę', list(df['game'].unique()))
     else:
         game = st.text_input('Kliknij, aby wpisać nową grę')
 
