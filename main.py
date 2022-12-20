@@ -10,10 +10,6 @@ df = pd.read_csv('board_df.csv')
 
 
 
-
-
-
-
 #frontend
 """### Boardstats"""
 
@@ -34,9 +30,11 @@ if main_menu == 'Wprowadź wyniki przeprowadzonej gry':
     else:
         game = st.text_input('Kliknij, aby wpisać nową grę')
 
+    df = pd.concat([df,[game,data]])
+    st.write(df)
     number_of_players = st.number_input('Wprowadź liczbę graczy, którzy grali', min_value = 1, step=1)
 
-    for i in range(int(number_of_players)):
+    if number_of_players >0:
         new_or_old_player = st.radio('Wprowadź ID gracza (3 pierwsze litery imienia i nazwiska)',('Istniejący gracz','Nowy gracz'))
 
         if new_or_old_player == 'Istniejący gracz':
@@ -44,3 +42,7 @@ if main_menu == 'Wprowadź wyniki przeprowadzonej gry':
         
         else:
             player = st.text_input('Kliknij, aby wpisać gracza')
+        
+        score = st.number_input('Wprowadź wynik gracza (liczba zdobytych punktów lub wygranych partii, nie zajmowane miejsce')
+
+        
