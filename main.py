@@ -41,4 +41,4 @@ if main_menu == 'Wprowadź wyniki przeprowadzonej gry':
         new_or_old_player = st.radio('Wprowadź ID gracza (3 pierwsze litery imienia i nazwiska)',('Istniejący gracz','Nowy gracz'))
 
         if new_or_old_player == 'Istniejący gracz':
-            player = st.multiselect('Kliknij, aby wybrać gracza',df.columns[1:])
+            player = st.multiselect('Kliknij, aby wybrać gracza',list(df.columns[1:]))
