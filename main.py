@@ -21,7 +21,6 @@ df = pd.read_csv('board_df.csv')
 
 
 main_menu = st.radio('Co chcesz zrobić?', ('Wyświetl całą tabelę','Wprowadź wyniki przeprowadzonej gry'))
-st.write(list(df.columns[1:])[1])
 if main_menu == 'Wyświetl całą tabelę':
     st.write(df)
 
@@ -31,7 +30,7 @@ if main_menu == 'Wprowadź wyniki przeprowadzonej gry':
     new_or_old_game = st.radio('No i rodzaj gry',('Istniejąca gra','Nowa gra'))
 
     if new_or_old_game == 'Istniejąca gra':
-        game = st.multiselect('Kliknij, aby wybrać grę',['everdell','wirus'])
+        game = st.multiselect('Kliknij, aby wybrać grę', list(df['game_info'][0].unique()))
     else:
         game = st.text_input('Kliknij, aby wpisać nową grę')
 
@@ -42,3 +41,6 @@ if main_menu == 'Wprowadź wyniki przeprowadzonej gry':
 
         if new_or_old_player == 'Istniejący gracz':
             player = st.multiselect('Kliknij, aby wybrać gracza',list(df.columns[1:]))
+        
+        else:
+            player = st.text_input('Kliknij, aby wpisać gracza')
