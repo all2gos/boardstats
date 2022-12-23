@@ -32,21 +32,9 @@ if main_menu == 'Wprowadź wyniki przeprowadzonej gry':
     
     number_of_players = st.number_input('Wprowadź liczbę graczy, którzy grali', min_value = 1, step=1)
 
-    counter = 0
-    while counter < number_of_players:
-        new_or_old_player = st.radio('Wprowadź ID gracza (3 pierwsze litery imienia i nazwiska)',('Istniejący gracz','Nowy gracz'))
+    players = st.multiselect('Wprowadź po kolei dane graczy', df.columns[2:])
+    scores = st.text_input('Wprowadź po kolei wyniki graczy oddzielone przecinkami')
 
-        if new_or_old_player == 'Istniejący gracz':
-            player = st.multiselect('Kliknij, aby wybrać gracza',list(df.columns[1:]))
-        
-        else:
-            player = st.text_input('Kliknij, aby wpisać gracza')
-        
-        
-        score = st.number_input('Wprowadź wynik gracza (liczba zdobytych punktów lub wygranych partii, nie zajmowane miejsce')
+    
 
-        if st.button('Wprowadź'):
-            main_dict[player] = score
-            counter += 1
-        st.write(main_dict)
         
