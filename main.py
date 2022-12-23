@@ -13,13 +13,12 @@ df = pd.read_csv('board_df.csv')
 #frontend
 """### Boardstats"""
 
-
+main_dict = dict()
 
 
 main_menu = st.radio('Co chcesz zrobić?', ('Wyświetl całą tabelę','Wprowadź wyniki przeprowadzonej gry'))
 if main_menu == 'Wyświetl całą tabelę':
     st.write(df)
-
 
 if main_menu == 'Wprowadź wyniki przeprowadzonej gry':    
     data = st.date_input('Na początku podaj datę rozgrywki')    
@@ -30,11 +29,11 @@ if main_menu == 'Wprowadź wyniki przeprowadzonej gry':
     else:
         game = st.text_input('Kliknij, aby wpisać nową grę')
 
-    df = pd.concat([df,[game,data]])
-    st.write(df)
+    
     number_of_players = st.number_input('Wprowadź liczbę graczy, którzy grali', min_value = 1, step=1)
 
-    if number_of_players >0:
+    counter = 0
+    while counter < number_of_players:
         new_or_old_player = st.radio('Wprowadź ID gracza (3 pierwsze litery imienia i nazwiska)',('Istniejący gracz','Nowy gracz'))
 
         if new_or_old_player == 'Istniejący gracz':
@@ -43,6 +42,10 @@ if main_menu == 'Wprowadź wyniki przeprowadzonej gry':
         else:
             player = st.text_input('Kliknij, aby wpisać gracza')
         
+        
         score = st.number_input('Wprowadź wynik gracza (liczba zdobytych punktów lub wygranych partii, nie zajmowane miejsce')
 
+        if st.button('Wprowadź'):
+            main_dict[player] = score
+            counter += 1
         
