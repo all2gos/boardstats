@@ -48,4 +48,5 @@ if main_menu == 'Wprowadź wyniki przeprowadzonej gry':
         if st.button('Wprowadź'):
             main_dict[player] = score
             counter += 1
+        st.write(main_dict)
         
