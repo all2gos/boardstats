@@ -32,9 +32,12 @@ if main_menu == 'Wprowadź wyniki przeprowadzonej gry':
     
     number_of_players = st.number_input('Wprowadź liczbę graczy, którzy grali', min_value = 1, step=1)
 
-    players = st.multiselect('Wprowadź po kolei dane graczy', df.columns[2:])
-    scores = st.text_input('Wprowadź po kolei wyniki graczy oddzielone przecinkami')
+    players = list(st.multiselect('Wprowadź po kolei dane graczy', df.columns[2:]))
+    scores = list(st.text_input('Wprowadź po kolei wyniki graczy oddzielone przecinkami').split(','))
 
+    print(players,scores)
     
+
+
 
         
