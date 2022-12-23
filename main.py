@@ -41,7 +41,7 @@ if main_menu == 'Wprowadź wyniki przeprowadzonej gry':
 
     df_after = pd.concat([df,main_dict])
     
-    df_after = pd.to_csv('board_df.csv')
+    df_after = pd.to_csv('board_df.csv',index=False)
 
 
 
