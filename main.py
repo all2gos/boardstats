@@ -39,8 +39,10 @@ if main_menu == 'Wprowadź wyniki przeprowadzonej gry':
             main_dict[players[i]] = scores[i]
             main_dict = pd.DataFrame(main_dict,index=[0])
 
-    test = pd.concat([df,main_dict])
-    st.write(test)
+    df_after = pd.concat([df,main_dict])
+    
+    df_after = pd.to_csv('board_df.csv')
+
 
 
 
