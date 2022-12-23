@@ -38,7 +38,7 @@ if main_menu == 'Wprowadź wyniki przeprowadzonej gry':
         for i in range(len(players)):
             main_dict[players[i]] = scores[i]
 
-    df = df.concat([df,main_dict])
+    df = pd.concat([df,main_dict])
     st.write(df)
 
 
