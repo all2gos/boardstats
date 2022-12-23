@@ -32,8 +32,14 @@ if main_menu == 'Wprowadź wyniki przeprowadzonej gry':
     players = list(st.multiselect('Wprowadź po kolei dane graczy', df.columns[2:]))
     scores = list(st.text_input('Wprowadź po kolei wyniki graczy oddzielone przecinkami').split(','))
 
-    st.write(players,scores)
+    if len(players) != len(scores):
+        st.write('Ilość graczy i wyników jest różna, sprawdź czy zrobiłxś wszystko poprawnie')
+    else:
+        for i in range(len(players)):
+            main_dict[players[i]] = scores[i]
 
+    df = df.concat([df,main_dict])
+    st.write(df)
 
 
 
