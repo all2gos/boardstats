@@ -35,11 +35,12 @@ if main_menu == 'Wprowadź wyniki przeprowadzonej gry':
     if len(players) != len(scores):
         st.write('Ilość graczy i wyników jest różna, sprawdź czy zrobiłxś wszystko poprawnie')
     else:
-        main_dict['data'] = data
-        main_dict['game'] = game
-        for i in range(len(players)):
-            main_dict[players[i]] = scores[i]
-            main_dict = pd.DataFrame(main_dict,index=[0])
+        if st.button('Wprowadź dane'):
+            main_dict['date'] = data
+            main_dict['game'] = game
+            for i in range(len(players)):
+                main_dict[players[i]] = scores[i]
+                main_dict = pd.DataFrame(main_dict,index=[0])
 
     df_after = pd.concat([df,main_dict])
     df_after.to_csv('board_df.csv',index=False)
