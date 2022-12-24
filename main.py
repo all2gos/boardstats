@@ -31,18 +31,18 @@ if main_menu == 'Wprowadź wyniki przeprowadzonej gry':
 
     players = list(st.multiselect('Wprowadź po kolei dane graczy', df.columns[2:]))
     scores = list(st.text_input('Wprowadź po kolei wyniki graczy oddzielone przecinkami').split(','))
-
-    if len(players) != len(scores):
-        st.write('Ilość graczy i wyników jest różna, sprawdź czy zrobiłxś wszystko poprawnie')
-    else:
-        if st.button('Wprowadź dane'):
-            main_dict['date'] = data
-            main_dict['game'] = game
-            for i in range(len(players)):
-                main_dict[players[i]] = scores[i]
-                main_dict = pd.DataFrame(main_dict,index=[0])
-
-    df_after = pd.concat([df,main_dict])
+    if st.button('Wprowadź dane'):
+        if len(players) != len(scores):
+            st.write('Ilość graczy i wyników jest różna, sprawdź czy zrobiłxś wszystko poprawnie')
+        else:
+            
+                main_dict['date'] = data
+                main_dict['game'] = game
+                for i in range(len(players)):
+                    main_dict[players[i]] = scores[i]
+                    main_dict = pd.DataFrame(main_dict,index=[0])
+                df_after = pd.concat([df,main_dict])
+    
     open('board_df.csv','w').write(df_after.to_csv(index=False))
     st.write(df_after)
     
