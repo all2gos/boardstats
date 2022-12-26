@@ -56,10 +56,10 @@ if main_menu == 'Wprowadź wyniki przeprowadzonej gry':
 if main_menu == 'Tryb deweloperski':
     develop_menu = st.radio('Co chcesz zrobić?', ('Usuń wybrany wiersz','Coś innego'))
     if develop_menu == 'Usuń wybrany wiersz':
-        id = st.number_input('Podaj id wiersza, który chcesz usunąć', value=int)
+        id = st.text_input('Podaj id wiersza, który chcesz usunąć')
 
         if st.button('Usuń'):
-            df_after = df.drop([id])
+            df_after = df.drop([int(id)])
 
             open('board_df.csv','w').write(df_after.to_csv(index=False))
             st.write(df_after)
