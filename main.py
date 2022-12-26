@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import streamlit as st
 import datetime
-st.set_page_config(page_title='Boardstats', page_icon=':game_die:')
+st.set_page_config(page_title='Boardstats', page_icon=':game_die:', layout='wide')
 
 #do pobierania
 @st.cache
