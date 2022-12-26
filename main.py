@@ -56,7 +56,7 @@ if main_menu == 'Wprowadź wyniki przeprowadzonej gry':
 if main_menu == 'Tryb deweloperski':
     develop_menu = st.radio('Co chcesz zrobić?', ('Usuń wybrany wiersz','Coś innego'))
     if develop_menu == 'Usuń wybrany wiersz':
-        id = st.number_input('Podaj id wiersza, który chcesz usunąć', value=int, min_value=0, max_value=len(df)-1)
+        id = st.number_input('Podaj id wiersza, który chcesz usunąć', value=int)
 
         if st.button('Usuń'):
             df_after = df.drop([id])
