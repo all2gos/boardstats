@@ -1,18 +1,19 @@
 import pandas as pd
 import numpy as np
 import streamlit as st
-
+import datetime
 st.set_page_config(page_title='Boardstats', page_icon=':game_die:')
 
-
+#do pobierania
+@st.cache
+def convert_df(df):    
+    return df.to_csv().encode('utf-8')
 
 df = pd.read_csv('board_df.csv')
 
 """### Boardstats"""
 
 main_dict = dict()
-
-
 
 main_menu = st.radio('Co chcesz zrobić?', ('Wyświetl całą tabelę','Wprowadź wyniki przeprowadzonej gry'))
 if main_menu == 'Wyświetl całą tabelę':
@@ -43,6 +44,12 @@ if main_menu == 'Wprowadź wyniki przeprowadzonej gry':
     
                 open('board_df.csv','w').write(df_after.to_csv(index=False))
                 st.write(df_after)
+
+                st.download_button(
+                label="Pobierz backup",
+                data=csv,
+                file_name='boardstats_' + str(datetime.date.today()) +'.csv',
+                mime='text/csv',)
     
 
 
