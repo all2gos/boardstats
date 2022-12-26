@@ -1,19 +1,29 @@
 import pandas as pd
 import numpy as np
 import streamlit as st
+from gsheetsdb import connect
 
+# Create a connection object.
+conn = connect()
+@st.cache(ttl=600)
+def run_query(query):
+    rows = conn.execute(query, headers=1)
+    rows = rows.fetchall()
+    return rows
 
+sheet_url = st.secrets["public_gsheets_url"]
+rows = run_query(f'SELECT * FROM "{sheet_url}"')
 
-# backend
-
+# Print results.
+for row in rows:
+    st.write(f"{row.name} has a :{row.pet}:")
+    
 df = pd.read_csv('board_df.csv')
 
-
-
-#frontend
 """### Boardstats"""
 
 main_dict = dict()
+
 
 
 main_menu = st.radio('Co chcesz zrobić?', ('Wyświetl całą tabelę','Wprowadź wyniki przeprowadzonej gry'))
