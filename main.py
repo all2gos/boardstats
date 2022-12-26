@@ -83,7 +83,7 @@ if main_menu == 'Statystyki':
     if stats_menu == 'Listę najczęściej granych gier':
         st.write(df['game'].value_counts())
     if stats_menu == 'Listę najczęściej grających graczy':
-        st.write(df.count())
+        st.write(sorted(df.drop(['game','date'],axis=1).count()))
 
 
         
