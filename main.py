@@ -15,7 +15,8 @@ df = pd.read_csv('board_df.csv')
 
 main_dict = dict()
 
-main_menu = st.radio('Co chcesz zrobić?', ('Wyświetl całą tabelę','Wprowadź wyniki przeprowadzonej gry'))
+main_menu = st.radio('Co chcesz zrobić?', ('Wyświetl całą tabelę','Wprowadź wyniki przeprowadzonej gry','Tryb deweloperski'))
+
 if main_menu == 'Wyświetl całą tabelę':
     st.write(df)
 
@@ -50,7 +51,7 @@ if main_menu == 'Wprowadź wyniki przeprowadzonej gry':
                 st.download_button(
                 label="Pobierz backup",
                 data=csv,
-                file_name='boardstats_' + str(datetime.date.today()) +'.csv',
+                file_name='board_df.csv',
                 mime='text/csv',)
     
 
