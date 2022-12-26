@@ -9,7 +9,7 @@ st.set_page_config(page_title='Boardstats', page_icon=':game_die:')
 def convert_df(df):    
     return df.to_csv().encode('utf-8')
 
-df = pd.read_csv('board_df.csv')
+df = pd.read_csv('board_df.csv').reset_index()
 
 """### Boardstats"""
 
