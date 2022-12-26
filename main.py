@@ -56,19 +56,21 @@ if main_menu == 'Wprowadź wyniki przeprowadzonej gry':
 if main_menu == 'Tryb deweloperski':
     develop_menu = st.radio('Co chcesz zrobić?', ('Usuń wybrany wiersz','Coś innego'))
     if develop_menu == 'Usuń wybrany wiersz':
-        id = st.number_input('Podaj id wiersza, który chcesz usunąć')
-        df_after = df.drop([id])
+        id = st.number_input('Podaj id wiersza, który chcesz usunąć', value=int, min_value=0, max_value=len(df)-1)
 
-        open('board_df.csv','w').write(df_after.to_csv(index=False))
-        st.write(df_after)
+        if st.button('Usuń'):
+            df_after = df.drop([id])
 
-        #pobieranie
-        csv = convert_df(df_after)
-        st.download_button(
-        label="Pobierz backup",
-        data=csv,
-        file_name='board_df.csv',
-        mime='text/csv',)
+            open('board_df.csv','w').write(df_after.to_csv(index=False))
+            st.write(df_after)
+
+            #pobieranie
+            csv = convert_df(df_after)
+            st.download_button(
+            label="Pobierz backup",
+            data=csv,
+            file_name='board_df.csv',
+            mime='text/csv',)
 
 if main_menu == 'Todolist':
     st.write('Opcja dodawania nowego gracza')
