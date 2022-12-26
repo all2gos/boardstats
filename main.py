@@ -1,8 +1,7 @@
 import pandas as pd
 import numpy as np
 import streamlit as st
-import datetime
-st.set_page_config(page_title='Boardstats', page_icon=':game_die:', layout='wide')
+st.set_page_config(page_title='Boardstats', page_icon=':game_die:')
 
 #do pobierania
 @st.cache
@@ -55,6 +54,7 @@ if main_menu == 'Wprowadź wyniki przeprowadzonej gry':
                 data=csv,
                 file_name='board_df.csv',
                 mime='text/csv',)
+                
 if main_menu == 'Tryb deweloperski':
     develop_menu = st.radio('Co chcesz zrobić?', ('Usuń wybrany wiersz','Coś innego'))
     if develop_menu == 'Usuń wybrany wiersz':
