@@ -79,7 +79,7 @@ if main_menu == 'Tryb deweloperski':
         st.write('Tworzenie statystyk')
     
 if main_menu == 'Statystyki':
-    stats_menu = st.radio('Jakie statystyki chcesz wyświetlić?',('Listę najczęściej granych gier','Listę najczęściej grających graczy'))
+    stats_menu = st.radio('Jakie statystyki chcesz wyświetlić?',('Listę najczęściej granych gier','Listę najczęściej grających graczy','Staty dla danego gracza'))
     if stats_menu == 'Listę najczęściej granych gier':
         st.write(df['game'].value_counts())
     if stats_menu == 'Listę najczęściej grających graczy':
