@@ -54,7 +54,22 @@ if main_menu == 'Wprowadź wyniki przeprowadzonej gry':
                 file_name='board_df.csv',
                 mime='text/csv',)
 if main_menu == 'Tryb deweloperski':
-    develop_menu = st.radio('Co chcesz zrobić?', ('Dodaj nowego gracza','Usuń wybrany wiersz'))
+    develop_menu = st.radio('Co chcesz zrobić?', ('Usuń wybrany wiersz'))
+    if develop_menu == 'Usuń wybrany wiersz':
+        id = st.number_input('Podaj id wiersza, który chcesz usunąć')
+        df_after = df.drop([id])
+
+        open('board_df.csv','w').write(df_after.to_csv(index=False))
+        st.write(df_after)
+
+        #pobieranie
+        csv = convert_df(df_after)
+        st.download_button(
+        label="Pobierz backup",
+        data=csv,
+        file_name='board_df.csv',
+        mime='text/csv',)
+
 if main_menu == 'Todolist':
     st.write('Opcja dodawania nowego gracza')
     st.write('Tworzenie statystyk')
