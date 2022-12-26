@@ -15,7 +15,7 @@ df = pd.read_csv('board_df.csv').drop(['Unnamed: 0'],axis=1)
 
 main_dict = dict()
 
-main_menu = st.radio('Co chcesz zrobić?', ('Wyświetl całą tabelę','Wprowadź wyniki przeprowadzonej gry','Tryb deweloperski'))
+main_menu = st.radio('Co chcesz zrobić?', ('Wyświetl całą tabelę','Wprowadź wyniki przeprowadzonej gry','Tryb deweloperski','Todolist'))
 
 if main_menu == 'Wyświetl całą tabelę':
     st.write(df)
@@ -39,7 +39,7 @@ if main_menu == 'Wprowadź wyniki przeprowadzonej gry':
                 main_dict['date'] = data
                 main_dict['game'] = game
                 for i in range(len(players)):
-                    main_dict[players[i]] = scores[i]
+                    main_dict[players[i]] = int(scores[i])
                     main_dict = pd.DataFrame(main_dict,index=[0])
                 df_after = pd.concat([df,main_dict])
     
@@ -53,6 +53,11 @@ if main_menu == 'Wprowadź wyniki przeprowadzonej gry':
                 data=csv,
                 file_name='board_df.csv',
                 mime='text/csv',)
+if main_menu == 'Tryb deweloperski':
+    develop_menu = st.radio('Co chcesz zrobić?', ('Dodaj nowego gracza','Usuń wybrany wiersz'))
+if main_menu == 'Todolist':
+    st.write('Opcja dodawania nowego gracza')
+    st.write('Tworzenie statystyk')
     
 
 
