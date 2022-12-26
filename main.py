@@ -45,6 +45,8 @@ if main_menu == 'Wprowadź wyniki przeprowadzonej gry':
                 open('board_df.csv','w').write(df_after.to_csv(index=False))
                 st.write(df_after)
 
+                #pobieranie
+                csv = convert_df(df_after)
                 st.download_button(
                 label="Pobierz backup",
                 data=csv,
