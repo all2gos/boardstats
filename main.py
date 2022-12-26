@@ -16,7 +16,7 @@ if 'Unnamed: 0' in df.columns:
 
 main_dict = dict()
 
-main_menu = st.radio('Co chcesz zrobić?', ('Wyświetl całą tabelę','Wprowadź wyniki przeprowadzonej gry','Tryb deweloperski','Todolist'))
+main_menu = st.radio('Co chcesz zrobić?', ('Wyświetl całą tabelę','Wprowadź wyniki przeprowadzonej gry','Statystyki','Tryb deweloperski'))
 
 if main_menu == 'Wyświetl całą tabelę':
     st.write(df)
@@ -54,9 +54,9 @@ if main_menu == 'Wprowadź wyniki przeprowadzonej gry':
                 data=csv,
                 file_name='board_df.csv',
                 mime='text/csv',)
-                
+
 if main_menu == 'Tryb deweloperski':
-    develop_menu = st.radio('Co chcesz zrobić?', ('Usuń wybrany wiersz','Coś innego'))
+    develop_menu = st.radio('Co chcesz zrobić?', ('Usuń wybrany wiersz','Todolist','Coś innego'))
     if develop_menu == 'Usuń wybrany wiersz':
         id = st.text_input('Podaj id wiersza, który chcesz usunąć')
 
@@ -74,12 +74,16 @@ if main_menu == 'Tryb deweloperski':
             file_name='board_df.csv',
             mime='text/csv',)
 
-if main_menu == 'Todolist':
-    st.write('Opcja dodawania nowego gracza')
-    st.write('Tworzenie statystyk')
+    if develop_menu == 'Todolist':
+        st.write('Opcja dodawania nowego gracza')
+        st.write('Tworzenie statystyk')
     
-
-
+if main_menu == 'Statystyki':
+    stats_menu = st.radio('Jakie statystyki chcesz wyświetlić?',('Listę najczęściej granych gier','Listę najczęściej grających graczy'))
+    if stats_menu == 'Listę najczęściej granych gier':
+        st.write(df['game'].value_counts())
+    if stats_menu == 'Listę najczęściej grających graczy':
+        st.write(df.columns[2:].counts())
 
 
         
