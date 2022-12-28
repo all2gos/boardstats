@@ -1,5 +1,7 @@
-,game,date,gosia,mati,raf,mama,darek,dusza,monia,janek,mama_janka,tata_janka,zosia,mama_gosi,tomek
-0,pociagi,2022-12-25,104.0,109,123,111.0,74.0,,,,,,
-1,aquatica,2022-12-25,27.0,73,46,nan,nan,,,,,,
-2,aquatica,2022-12-26,,42,59,31.0,25.0,,,,,,
-0,aquatica,2022-12-26,,54,61,41,31,,,,,,
+,game,date,gosia,mati,raf,mama,darek,dusza,monia,janek,mama_janka,tata_janka,zosia,mama_gosi,tomek,milena,tata_mileny,mama_mileny,zapas,zapas,zapas
+0,pociagi,2022-12-25,104.0,109.0,123.0,111.0,74.0,,,,,,,,,,,,,
+1,aquatica,2022-12-25,27.0,73.0,46.0,,,,,,,,,,,,,,,
+2,aquatica,2022-12-26,,42.0,59.0,31.0,25.0,,,,,,,,,,,,,
+3,aquatica,2022-12-26,,54.0,61.0,41.0,31.0,,,,,,,,,,,,,
+4,brass,2022-12-27,,,111.0,,,,,113.0,76.0,93.0,76.0,,,,,,,
+
