@@ -64,27 +64,30 @@ if main_menu == 'Wprowadź wyniki przeprowadzonej gry':
                 mime='text/csv',)
 
 if main_menu == 'Tryb deweloperski':
-    develop_menu = st.radio('Co chcesz zrobić?', ('Usuń wybrany wiersz','Todolist','Coś innego'))
-    if develop_menu == 'Usuń wybrany wiersz':
-        id = st.text_input('Podaj id wiersza, który chcesz usunąć')
+    password = st.text_input('Wprowadź hasło')
+    st.write('Jeżeli nie znasz hasła znaczy, że nie jesteś adminem więc żeby coś zrobić w trybie deweloperskim musisz się z nim skontaktować')
+    if password == 'dunderystyczny':
+        develop_menu = st.radio('Co chcesz zrobić?', ('Usuń wybrany wiersz','Todolist','Coś innego'))
+        if develop_menu == 'Usuń wybrany wiersz':
+            id = st.text_input('Podaj id wiersza, który chcesz usunąć')
 
-        if st.button('Usuń'):
-            df_after = df.drop([int(id)])
+            if st.button('Usuń'):
+                df_after = df.drop([int(id)])
 
-            open('board_df.csv','w').write(df_after.to_csv(index=False))
-            st.write(df_after)
+                open('board_df.csv','w').write(df_after.to_csv(index=False))
+                st.write(df_after)
 
-            #pobieranie
-            csv = convert_df(df_after)
-            st.download_button(
-            label="Pobierz backup",
-            data=csv,
-            file_name='board_df.csv',
-            mime='text/csv',)
+                #pobieranie
+                csv = convert_df(df_after)
+                st.download_button(
+                label="Pobierz backup",
+                data=csv,
+                file_name='board_df.csv',
+                mime='text/csv',)
 
-    if develop_menu == 'Todolist':
-        st.write('Opcja dodawania nowego gracza')
-        st.write('Tworzenie statystyk')
+        if develop_menu == 'Todolist':
+            st.write('Opcja dodawania nowego gracza')
+            st.write('Tworzenie statystyk')
     
 if main_menu == 'Statystyki':
     stats_menu = st.radio('Jakie statystyki chcesz wyświetlić?',('Listę najczęściej granych gier','Listę najczęściej grających graczy','Staty dla danego gracza'))
