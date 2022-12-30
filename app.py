@@ -31,7 +31,13 @@ if main_menu == 'Wprowadź wyniki przeprowadzonej gry':
         game = st.text_input('Kliknij, aby wpisać nową grę')
 
     players = list(st.multiselect('Wprowadź po kolei dane graczy', df.columns[2:]))
-    scores = list(st.text_input('Wprowadź po kolei wyniki graczy oddzielone przecinkami').split(','))
+    var = list(st.text_input('Wprowadź po kolei wyniki graczy oddzielone przecinkami').split(','))
+    scores = []
+    for i in range(len(var)):
+        scores.append(sum(list(map(lambda x: int(x),var[i].split('+')))))
+
+    scores
+
     if st.button('Wprowadź dane'):
         if len(players) != len(scores):
             st.write('Ilość graczy i wyników jest różna, sprawdź czy zrobiłxś wszystko poprawnie')
