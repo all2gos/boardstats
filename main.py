@@ -34,9 +34,7 @@ if main_menu == 'Wprowadź wyniki przeprowadzonej gry':
     var = list(st.text_input('Wprowadź po kolei wyniki graczy oddzielone przecinkami').split(','))
     scores = []
     for i in range(len(var)):
-        scores.append(sum(list(map(lambda x: int(x),var[i].split('+')))))
-
-    scores
+        scores.append(sum(list(map(lambda x: int(x),var[i].split('+')))))    
 
     if st.button('Wprowadź dane'):
         if len(players) != len(scores):
