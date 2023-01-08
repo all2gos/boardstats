@@ -129,5 +129,5 @@ if main_menu == 'Statystyki':
             for i in range(len(position_df)):
                 your_place += position_df['miejsce'].iloc[i]*position_df['tyle_razy_gracz_zajal_to_miejsce'].iloc[i]
             your_place /= len(player_df)
-            st.write('Współczynnik skuteczności jako gracz',int(avg_place/your_place)*100)
+            st.write('Współczynnik skuteczności jako gracz',int(avg_place/your_place*100))
             
