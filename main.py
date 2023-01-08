@@ -101,6 +101,7 @@ if main_menu == 'Statystyki':
         st.write(player_df)
         st.write('Frekwencja:',int(len(player_df)/len(df)*100),'%')
         st.write('Najczęściej grane gry:', player_df['game'].value_counts())
+        st.write('Statystyki odnośnie zajmowanego miejsca')
         position_dict = {1:0,2:0,3:0,4:0,5:0,6:0,7:0}
         for i in range(len(player_df)):
             row = player_df.iloc[i].dropna()
