@@ -136,15 +136,15 @@ if main_menu == 'Statystyki':
             for i in range(len(position_df)):
                 your_place += position_df['miejsce'].iloc[i]*position_df['tyle_razy_gracz_zajal_to_miejsce'].iloc[i]
             your_place /= len(player_df)
-            st.write('Współczynnik skuteczności jako gracz',int(avg_place/your_place*100))
-            if st.button('Chcę wiedzieć jak to jest liczone'):
+            st.write('Współczynnik skuteczności jako gracz*',int(avg_place/your_place*100))
+            if st.button('*Chcę wiedzieć jak to jest liczone'):
                 st.write('Współczynnik skuteczności jako gracz to stosunek dwóch składowych')
-                st.write('Średnio zajmowanego przez gracza miejsce')
-                st.write('Miejsce jakie średnio POWINIEN zajmować dany gracz, gdyby w każdej grze był dokładnie w środku stawki (np. w grze 3 osobowej średnie miejsce to 2, a w grze 4 osobowej średnie miejsce to 2,5')
+                st.write('Średnio zajmowanego przez gracza miejsca')
+                st.write('Miejsce jakie średnio POWINIEN zajmować dany gracz, gdyby w każdej grze był dokładnie w środku stawki (np. w grze 3 osobowej średnie miejsce to 2, a w grze 4 osobowej średnie miejsce to 2,5)')
                 st.write('Finalny współczynnik to stosunek tej pierwszej wartości przez tą drugą pomnożony przez 100 i zaokrąglony do liczb całkowitych')
 
-                if st.button('Chcę wiedzieć jeszcze więcej'):
+                if st.checkbox('Chcę wiedzieć jeszcze więcej'):
                     st.write('Taka kolejność dzielenia wynika z chęci proporcjonalności tego wskaźnika (im wyższy, tym lepszym jestem graczem)') 
 
-                    if st.button('Tylko dla nerdów'):
+                    if st.checkbox('Tylko dla nerdów'):
                         pass
