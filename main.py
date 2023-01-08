@@ -115,5 +115,5 @@ if main_menu == 'Statystyki':
                     place = char+1
                     break
             position_dict[place]+=1        
-        st.write(pd.DataFrame(position_dict.items()))
+        st.write(pd.DataFrame(position_dict.items()).drop([0],axis=1))
         
