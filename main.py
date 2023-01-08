@@ -87,7 +87,9 @@ if main_menu == 'Tryb deweloperski':
 
         if develop_menu == 'Todolist':
             st.write('Opcja dodawania nowego gracza')
-            st.write('Tworzenie statystyk')
+            st.write('Poprawienie filtrowania ze względu na grę')
+            st.write('Dodanie opcji Statystyki dla danej gry')
+            
     
 if main_menu == 'Statystyki':
     stats_menu = st.radio('Jakie statystyki chcesz wyświetlić?',('Listę najczęściej granych gier','Listę najczęściej grających graczy','Staty dla danego gracza'))
