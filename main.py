@@ -115,10 +115,10 @@ if main_menu == 'Statystyki':
                     if int(position_list[char]) == int(row[player]):
                         place = char+1
                         break
-                if position_dict[place] not in position_dict:
-                    position_dict[place] = 1
+                if place in position_dict:
+                    position_dict[place] += 1
                 else:
-                    position_dict[place]+=1        
+                    position_dict[place] = 1        
             st.write(pd.DataFrame(data = position_dict.items()).set_index([0]))
 
         
