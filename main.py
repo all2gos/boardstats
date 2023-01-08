@@ -108,6 +108,10 @@ if main_menu == 'Statystyki':
             position_list = []
             for j in range(2,len(row.unique())):
                 position_list.append(row[j])
-            st.write(position_list)
+            position_list = sorted(position_list)
+
+            for char in position_list:
+                if position_list[char] == row['gosia']:
+                    print(char)
 
         
