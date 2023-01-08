@@ -123,7 +123,7 @@ if main_menu == 'Statystyki':
             st.write(position_df)
 
             st.write('Współczynnik skuteczności jako gracz')
-            st.write(position_df.mean(),player_df['liczba_graczy'].mean())
+            st.write(player_df['liczba_graczy'].mean()/2)
             st.write(position_df.mean()/player_df['liczba_graczy'].mean())
 
         
