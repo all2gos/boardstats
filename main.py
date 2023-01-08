@@ -118,7 +118,12 @@ if main_menu == 'Statystyki':
                 if place in position_dict:
                     position_dict[place] += 1
                 else:
-                    position_dict[place] = 1        
-            st.write(pd.DataFrame(data = position_dict.items()).set_index([0]))
+                    position_dict[place] = 1    
+            position_df = pd.DataFrame(data = position_dict.items()).set_index([0])
+            st.write(position_df)
+
+            st.write('Współczynnik skuteczności jako gracz')
+            st.write(position_df.mean(),player_df['liczba_graczy'].mean())
+            st.write(position_df.mean()/player_df['liczba_graczy'].mean())
 
         
