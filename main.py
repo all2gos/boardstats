@@ -97,7 +97,7 @@ if main_menu == 'Statystyki':
         st.write(df.drop(['game','date','liczba_graczy'],axis=1).count().reset_index(name='count').sort_values(['count'],ascending=False))
     if stats_menu == 'Staty dla danego gracza':
         player = st.text_input('Wybierz gracza')  
-        if player in df.columns():               
+        if player in df.columns:               
             player_df = df[df[player].notna()]
             st.write(player_df)
             st.write('Frekwencja:',int(len(player_df)/len(df)*100),'%')
