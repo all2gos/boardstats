@@ -108,7 +108,7 @@ if main_menu == 'Statystyki':
             position_list = []
             for j in range(2,len(row.unique())):
                 position_list.append(row[j])
-            position_list = sorted(position_list)
+            position_list = sorted(position_list,reverse=True)
 
             for char in range(len(position_list)):
                 st.write(int(position_list[char]),int(row[player]))
