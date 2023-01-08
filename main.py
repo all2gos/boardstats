@@ -104,12 +104,14 @@ if main_menu == 'Statystyki':
         position_dict = dict()
         for i in range(len(player_df)):
             row = player_df.iloc[i].dropna()
-            st.write(row[player])
+            st.write(row)
             position_list = []
             for j in range(2,len(row.unique())):
                 position_list.append(row[j])
             position_list = sorted(position_list)
 
-
+            for char in range(len(position_list)):
+                if int(position_list[char]) == int(row[player]):
+                    print(char)
 
         
