@@ -114,6 +114,6 @@ if main_menu == 'Statystyki':
                 if int(position_list[char]) == int(row[player]):
                     place = char+1
                     break
-            position_dict[place]+=1
-        st.write(position_dict)
+            position_dict[place]+=1        
+        st.write(pd.DataFrame(position_dict))
         
