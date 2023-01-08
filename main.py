@@ -119,7 +119,7 @@ if main_menu == 'Statystyki':
                     position_dict[place] += 1
                 else:
                     position_dict[place] = 1    
-            position_df = (pd.DataFrame(data = position_dict.items(),columns=['miejsce','tyle razy gracz zajal to miejsce']))
+            position_df = (pd.DataFrame(data = position_dict.items(),columns=['miejsce','tyle_razy_gracz_zajal_to_miejsce']))
             st.write(position_df)
 
             st.write('Współczynnik skuteczności jako gracz')
@@ -127,5 +127,8 @@ if main_menu == 'Statystyki':
             
             your_place = 0
             for i in range(len(position_df)):
-                pass
-        
+                your_place += position_df['miejsce'].iloc[i]*position_df['tyle_razy_gracz_zajal_to_miejsce']
+            st.write(your_place)
+            your_place /= len(player_df)
+            st.write(your_place)
+            st.write(your_place/avg_place)
