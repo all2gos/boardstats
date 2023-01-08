@@ -96,11 +96,13 @@ if main_menu == 'Statystyki':
     if stats_menu == 'Listę najczęściej grających graczy':
         st.write(df.drop(['game','date'],axis=1).count().reset_index(name='count').sort_values(['count'],ascending=False))
     if stats_menu == 'Staty dla danego gracza':
-        player = st.text_input('Wybierz gracza')   
-        if player in df.columns:     
+        player = st.text_input('Wybierz gracza')                 
             player_df = df[df[player].notna()]
             st.write(player_df)
             st.write('Frekwencja:',int(len(player_df)/len(df)*100),'%')
             st.write('Najczęściej grane gry:', player_df['game'].value_counts())
+            position_dict = dict()
+            for i in range(len(player_df)):
+                st.write(player_df[i])
 
         
