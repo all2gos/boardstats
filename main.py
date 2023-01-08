@@ -113,6 +113,6 @@ if main_menu == 'Statystyki':
             for char in range(len(position_list)):
                 st.write(int(position_list[char]),int(row[player]))
                 if int(position_list[char]) == int(row[player]):
-                    print(char)
+                    st.write('Miejsce:',char+1)
 
         
