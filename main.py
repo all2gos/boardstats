@@ -104,8 +104,7 @@ if main_menu == 'Statystyki':
         st.write('Statystyki odnośnie zajmowanego miejsca')
         position_dict = {1:0,2:0,3:0,4:0,5:0,6:0,7:0}
         for i in range(len(player_df)):
-            row = player_df.iloc[i].dropna()
-            st.write(row)
+            row = player_df.iloc[i].dropna()            
             position_list = []
             for j in range(2,len(row.unique())):
                 position_list.append(row[j])
