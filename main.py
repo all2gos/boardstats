@@ -127,7 +127,7 @@ if main_menu == 'Statystyki':
             
             your_place = 0
             for i in range(len(position_df)):
-                your_place += position_df['miejsce'].iloc[i]*position_df['tyle_razy_gracz_zajal_to_miejsce']
+                your_place += int(position_df['miejsce'].iloc[i])*int(position_df['tyle_razy_gracz_zajal_to_miejsce'])
             st.write(your_place)
             your_place /= len(player_df)
             st.write(your_place)
