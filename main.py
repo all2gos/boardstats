@@ -119,11 +119,14 @@ if main_menu == 'Statystyki':
                     position_dict[place] += 1
                 else:
                     position_dict[place] = 1    
-            position_df = pd.DataFrame(data = position_dict.items()).set_index([0])
+            position_df = sorted(pd.DataFrame(data = position_dict.items()).set_index([0]))
             st.write(position_df)
 
             st.write('Współczynnik skuteczności jako gracz')
-            st.write(player_df['liczba_graczy'].mean()/2)
-            st.write(position_df.mean()/player_df['liczba_graczy'].mean())
+            avg_place = player_df['liczba_graczy'].mean()/2
+            
+            your_place = 0
+            for i in range(len(position_df)):
+                your_place += position_df
 
         
