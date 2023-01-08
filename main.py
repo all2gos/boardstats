@@ -111,6 +111,7 @@ if main_menu == 'Statystyki':
             position_list = sorted(position_list)
 
             for char in range(len(position_list)):
+                st.write(int(position_list[char]),int(row[player]))
                 if int(position_list[char]) == int(row[player]):
                     print(char)
 
