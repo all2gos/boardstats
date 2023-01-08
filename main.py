@@ -151,11 +151,11 @@ if main_menu == 'Statystyki':
                 """
                 --------------------------------------------------------------------
                 """
-                st.write('Taka kolejność dzielenia wynika z chęci proporcjonalności tego wskaźnika (im wyższy, tym lepszym jestem graczem)') 
+                st.write('Taka kolejność dzielenia wynika z chęci uzyskania proporcjonalności tego wskaźnika (im wyższy, tym lepszym jestem graczem)') 
 
                 """
                 ----------------------------------------------------------------------
                 """
                 st.write('Możnaby zadać pytanie jakie są wartości brzegowe tego parametru')
                 st.write('Maksymalny współczynnik to (50+50*n), gdzie n to liczba graczy')
-                st.write('Minimalny współczynnik jest znacznie bardziej skomplikowany dla 3,4,5 graczy wynosi kolejno 66,67;62,5;60')
+                st.write('Minimalny współczynnik jest znacznie bardziej skomplikowany dla 3,4,5 graczy wynosi kolejno 67,62,60')
