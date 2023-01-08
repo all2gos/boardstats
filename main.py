@@ -105,6 +105,9 @@ if main_menu == 'Statystyki':
                 games = st.multiselect('Wybierz grę, która Cię interesuje',player_df['game'].unique()) 
                 if games != 'Wybierz grę, która Cię interesuje':       
                     player_df = player_df[player_df['game'] ==  games[0]]
+            """
+            --------------------------------------------------
+            """
             st.write('Spis wszystkich gier, w które zagrał dany gracz')
             st.write(player_df)
             st.write('Frekwencja: (nie działa filtrowanie growe)',int(len(player_df)/len(df)*100),'%')
@@ -147,3 +150,9 @@ if main_menu == 'Statystyki':
                 """
                 st.write('Taka kolejność dzielenia wynika z chęci proporcjonalności tego wskaźnika (im wyższy, tym lepszym jestem graczem)') 
 
+                """
+                ----------------------------------------------------------------------
+                """
+                st.write('Możnaby zadać pytanie jakie są wartości brzegowe tego parametru')
+                st.write('Maksymalny współczynnik to (50+50*n), gdzie n to liczba graczy')
+                st.write('Minimalny współczynnik jest znacznie bardziej skomplikowany dla 3,4,5 graczy wynosi kolejno 66,67;62,5;60')
