@@ -105,7 +105,7 @@ if main_menu == 'Statystyki':
             filtr = st.checkbox('Zaznacz jeśli chcesz zobaczyć statystyki dla wybranych gier')
             if filtr:
                 games = st.multiselect('Wybierz gry, które Cię interesują',player_df['game'].unique())
-                st.write(games)
+                st.write(games.values())
             st.write('Frekwencja:',int(len(player_df)/len(df)*100),'%')
             st.write('Najczęściej grane gry:', player_df['game'].value_counts())
             st.write('Statystyki odnośnie zajmowanego miejsca')
