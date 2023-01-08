@@ -100,7 +100,7 @@ if main_menu == 'Statystyki':
         if player in df.columns:     
             player_df = df[df[player].notna()]
             st.write(player_df)
-            st.write('Frekwencja:',int(len(player_df)/len(df)*100))
-            st.write('Najczęściej grane gry:', player_df['game'].count())
+            st.write('Frekwencja:',int(len(player_df)/len(df)*100),'%')
+            st.write('Najczęściej grane gry:', player_df['game'].count().reset_index(name='count').sort_values(['count'],ascending=False))
 
         
