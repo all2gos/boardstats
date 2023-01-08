@@ -29,7 +29,7 @@ if main_menu == 'Wprowadź wyniki przeprowadzonej gry':
         game = st.multiselect('Kliknij, aby wybrać grę', list(df['game'].unique()))
     else:
         game = st.text_input('Kliknij, aby wpisać nową grę')
-
+    numbers_of_players = st.text_input('Wprowadź liczbę graczy')
     players = list(st.multiselect('Wprowadź po kolei dane graczy', df.columns[2:]))
     var = list(st.text_input('Wprowadź po kolei wyniki graczy oddzielone przecinkami').split(','))
      
@@ -47,6 +47,7 @@ if main_menu == 'Wprowadź wyniki przeprowadzonej gry':
             
                 main_dict['date'] = data
                 main_dict['game'] = game
+                main_dict['liczba_graczy'] = numbers_of_players
                 for i in range(len(players)):
                     main_dict[players[i]] = int(scores[i])
                     main_dict = pd.DataFrame(main_dict,index=[0])
