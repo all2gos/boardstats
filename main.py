@@ -102,8 +102,9 @@ if main_menu == 'Statystyki':
             player_df = df[df[player].notna()]            
             filtr = st.checkbox('Zaznacz jeśli chcesz zobaczyć statystyki dla wybranej gry')
             if filtr:
-                games = st.multiselect('Wybierz grę, która Cię interesuje',player_df['game'].unique())                
-                player_df = player_df[player_df['game'] ==  games[0]]
+                games = st.multiselect('Wybierz grę, która Cię interesuje',player_df['game'].unique()) 
+                if games != 'Wybierz grę, która Cię interesuje':       
+                    player_df = player_df[player_df['game'] ==  games[0]]
             st.write('Spis wszystkich gier, w które zagrał dany gracz')
             st.write(player_df)
             st.write('Frekwencja:',int(len(player_df)/len(df)*100),'%')
