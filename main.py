@@ -142,9 +142,8 @@ if main_menu == 'Statystyki':
                 st.write('Średnio zajmowanego przez gracza miejsca')
                 st.write('Miejsce jakie średnio POWINIEN zajmować dany gracz, gdyby w każdej grze był dokładnie w środku stawki (np. w grze 3 osobowej średnie miejsce to 2, a w grze 4 osobowej średnie miejsce to 2,5)')
                 st.write('Finalny współczynnik to stosunek tej pierwszej wartości przez tą drugą pomnożony przez 100 i zaokrąglony do liczb całkowitych')
+                """
+                --------------------------------------------------------------------
+                """
+                st.write('Taka kolejność dzielenia wynika z chęci proporcjonalności tego wskaźnika (im wyższy, tym lepszym jestem graczem)') 
 
-                if st.checkbox('Chcę wiedzieć jeszcze więcej'):
-                    st.write('Taka kolejność dzielenia wynika z chęci proporcjonalności tego wskaźnika (im wyższy, tym lepszym jestem graczem)') 
-
-                    if st.checkbox('Tylko dla nerdów'):
-                        pass
