@@ -99,13 +99,13 @@ if main_menu == 'Statystyki':
         player = st.text_input('Wybierz gracza')  
         
         if player in df.columns:               
-            player_df = df[df[player].notna()]
-            st.write('Spis wszystkich gier, w które zagrał dany gracz')
-            st.write(player_df)
+            player_df = df[df[player].notna()]            
             filtr = st.checkbox('Zaznacz jeśli chcesz zobaczyć statystyki dla wybranych gier')
             if filtr:
-                games = st.multiselect('Wybierz gry, które Cię interesują',player_df['game'].unique())
-                st.write(type(games))
+                games = st.multiselect('Wybierz gry, które Cię interesują',player_df['game'].unique())                
+                player_df = player_df[player_df['game'] in games]
+            st.write('Spis wszystkich gier, w które zagrał dany gracz')
+            st.write(player_df)
             st.write('Frekwencja:',int(len(player_df)/len(df)*100),'%')
             st.write('Najczęściej grane gry:', player_df['game'].value_counts())
             st.write('Statystyki odnośnie zajmowanego miejsca')
