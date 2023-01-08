@@ -97,7 +97,7 @@ if main_menu == 'Statystyki':
         st.write(df.drop(['game','date'],axis=1).count().reset_index(name='count').sort_values(['count'],ascending=False))
     if stats_menu == 'Staty dla danego gracza':
         player = st.multiselect('Wybierz gracza',df.drop(['game','date'],axis=1).columns)
-        st.write(player)
+        st.write(player[1])
         player_df = df[df[player].notna()]
         st.write(player_df)
 
