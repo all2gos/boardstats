@@ -119,7 +119,7 @@ if main_menu == 'Statystyki':
                     position_dict[place] += 1
                 else:
                     position_dict[place] = 1    
-            position_df = (pd.DataFrame(data = position_dict.items()))
+            position_df = (pd.DataFrame(data = position_dict.items(),columns=['miejsce','tyle razy gracz zajal to miejsce']))
             st.write(position_df)
 
             st.write('Współczynnik skuteczności jako gracz')
