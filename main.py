@@ -103,6 +103,6 @@ if main_menu == 'Statystyki':
         st.write('Najczęściej grane gry:', player_df['game'].value_counts())
         position_dict = dict()
         for i in range(len(player_df)):
-            st.write(player_df.iloc[i])
+            st.write(player_df.iloc[i].dropna())
 
         
