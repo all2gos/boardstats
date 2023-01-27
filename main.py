@@ -93,7 +93,7 @@ if main_menu == 'Tryb deweloperski':
             
     
 if main_menu == 'Statystyki':
-    stats_menu = st.radio('Jakie statystyki chcesz wyświetlić?',('Listę najczęściej granych gier','Listę najczęściej grających graczy','Staty dla danego gracza'))
+    stats_menu = st.radio('Jakie statystyki chcesz wyświetlić?',('Listę najczęściej granych gier','Listę najczęściej grających graczy','Staty dla danego gracza','Współczynnik skuteczności jako gracz'))
     if stats_menu == 'Listę najczęściej granych gier':
         st.write(df['game'].value_counts())
     if stats_menu == 'Listę najczęściej grających graczy':
@@ -162,3 +162,7 @@ if main_menu == 'Statystyki':
                 st.write('Możnaby zadać pytanie jakie są wartości brzegowe tego parametru')
                 st.write('Maksymalny współczynnik to (50+50*n), gdzie n to liczba graczy')
                 st.write('Minimalny współczynnik jest znacznie bardziej skomplikowany dla 3,4,5 graczy wynosi kolejno 67,62,60')
+    
+    if stats_menu == 'Współczynnik skuteczności jako gracz':
+        for playe in df.columns:
+            st.write(player)
