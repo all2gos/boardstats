@@ -139,6 +139,7 @@ if main_menu == 'Statystyki':
         if stats_menu == 'Współczynnik skuteczności jako gracz':
 
             for player in df.columns:
+                st.write(player)
                 player_df = df[df[player].notna()]
                 avg_place = player_df['liczba_graczy'].mean()/2
                 
