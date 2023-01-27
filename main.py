@@ -93,7 +93,7 @@ if main_menu == 'Tryb deweloperski':
             
     
 if main_menu == 'Statystyki':
-    stats_menu = st.radio('Jakie statystyki chcesz wyświetlić?',('Listę najczęściej granych gier','Listę najczęściej grających graczy','Staty dla danego gracza', 'Współczynnik skuteczności jako gracz'))
+    stats_menu = st.radio('Jakie statystyki chcesz wyświetlić?',('Listę najczęściej granych gier','Listę najczęściej grających graczy','Staty dla danego gracza'))
     if stats_menu == 'Listę najczęściej granych gier':
         st.write(df['game'].value_counts())
     if stats_menu == 'Listę najczęściej grających graczy':
@@ -135,35 +135,30 @@ if main_menu == 'Statystyki':
             position_df = (pd.DataFrame(data = position_dict.items(),columns=['miejsce','tyle_razy_gracz_zajal_to_miejsce']))
             st.write(position_df)
 
-        
-        if stats_menu == 'Współczynnik skuteczności jako gracz':
-
-            for player in df.columns:
-                st.write(player)
-                player_df = df[df[player].notna()]
-                avg_place = player_df['liczba_graczy'].mean()/2
-                
-                your_place = 0
-                for i in range(len(position_df)):
-                    your_place += position_df['miejsce'].iloc[i]*position_df['tyle_razy_gracz_zajal_to_miejsce'].iloc[i]
-                your_place /= len(player_df)
+            
+            avg_place = player_df['liczba_graczy'].mean()/2
+            
+            your_place = 0
+            for i in range(len(position_df)):
+                your_place += position_df['miejsce'].iloc[i]*position_df['tyle_razy_gracz_zajal_to_miejsce'].iloc[i]
+            your_place /= len(player_df)
+            """
+            ----------------------------------------------------
+            """
+            st.write('Współczynnik skuteczności jako gracz*',int(avg_place/your_place*100))
+            if st.button('*Chcę wiedzieć jak to jest liczone'):
+                st.write('Współczynnik skuteczności jako gracz to stosunek dwóch składowych')
+                st.write('Średnio zajmowanego przez gracza miejsca')
+                st.write('Miejsce jakie średnio POWINIEN zajmować dany gracz, gdyby w każdej grze był dokładnie w środku stawki (np. w grze 3 osobowej średnie miejsce to 2, a w grze 4 osobowej średnie miejsce to 2,5)')
+                st.write('Finalny współczynnik to stosunek tej pierwszej wartości przez tą drugą pomnożony przez 100 i zaokrąglony do liczb całkowitych')
                 """
-                ----------------------------------------------------
+                --------------------------------------------------------------------
                 """
-                st.write(player,'*',int(avg_place/your_place*100))
-                if st.button('*Chcę wiedzieć jak to jest liczone'):
-                    st.write('Współczynnik skuteczności jako gracz to stosunek dwóch składowych')
-                    st.write('Średnio zajmowanego przez gracza miejsca')
-                    st.write('Miejsce jakie średnio POWINIEN zajmować dany gracz, gdyby w każdej grze był dokładnie w środku stawki (np. w grze 3 osobowej średnie miejsce to 2, a w grze 4 osobowej średnie miejsce to 2,5)')
-                    st.write('Finalny współczynnik to stosunek tej pierwszej wartości przez tą drugą pomnożony przez 100 i zaokrąglony do liczb całkowitych')
-                    """
-                    --------------------------------------------------------------------
-                    """
-                    st.write('Taka kolejność dzielenia wynika z chęci uzyskania proporcjonalności tego wskaźnika (im wyższy, tym lepszym jestem graczem)') 
+                st.write('Taka kolejność dzielenia wynika z chęci uzyskania proporcjonalności tego wskaźnika (im wyższy, tym lepszym jestem graczem)') 
 
-                    """
-                    ----------------------------------------------------------------------
-                    """
-                    st.write('Możnaby zadać pytanie jakie są wartości brzegowe tego parametru')
-                    st.write('Maksymalny współczynnik to (50+50*n), gdzie n to liczba graczy')
-                    st.write('Minimalny współczynnik jest znacznie bardziej skomplikowany dla 3,4,5 graczy wynosi kolejno 67,62,60')
+                """
+                ----------------------------------------------------------------------
+                """
+                st.write('Możnaby zadać pytanie jakie są wartości brzegowe tego parametru')
+                st.write('Maksymalny współczynnik to (50+50*n), gdzie n to liczba graczy')
+                st.write('Minimalny współczynnik jest znacznie bardziej skomplikowany dla 3,4,5 graczy wynosi kolejno 67,62,60')
