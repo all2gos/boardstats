@@ -73,7 +73,10 @@ if main_menu == 'Tryb deweloperski':
             id = st.text_input('Podaj id wiersza, który chcesz usunąć')
 
             if st.button('Usuń'):
-                df_after = df.drop([int(id)])
+                if id == '-1':
+                    df_after = df.drop([-1])
+                else:
+                    df_after = df.drop([int(id)])
 
                 open('board_df.csv','w').write(df_after.to_csv(index=False))
                 st.write(df_after)
