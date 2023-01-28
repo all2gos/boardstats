@@ -90,8 +90,14 @@ if main_menu == 'Tryb deweloperski':
                 mime='text/csv',)
         if develop_menu == 'Dodaj nowego gracza':
             col = st.text_input('Wpisz nazwe gracza')
-            df = df.assign(col=np.nan)
-            
+            df_after = df.assign(col=np.nan)
+            st.write(df_after)
+            csv = convert_df(df_after)
+            st.download_button(
+            label="Pobierz backup",
+            data=csv,
+            file_name='board_df.csv',
+            mime='text/csv',)
 
         if develop_menu == 'Todolist':
             st.write('Opcja dodawania nowego gracza')
