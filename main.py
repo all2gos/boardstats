@@ -115,7 +115,7 @@ if main_menu == 'Statystyki':
             --------------------------------------------------
             """
             st.write('Spis wszystkich gier, w które zagrał dany gracz')
-            st.write(player_df)
+            st.write(player_df.dropna(axis='columns'))
             st.write('Frekwencja: (nie działa filtrowanie growe)',int(len(player_df)/len(df)*100),'%')
             st.write('Najczęściej grane gry:', player_df['game'].value_counts())
             st.write('Statystyki odnośnie zajmowanego miejsca')
