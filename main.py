@@ -109,7 +109,7 @@ if main_menu == 'Statystyki':
             filtr = st.checkbox('Zaznacz jeśli chcesz zobaczyć statystyki dla wybranej gry (działa, bo działa jeszcze bym z tego nie korzystał)')
             if filtr:
                 games = st.multiselect('Wybierz grę, która Cię interesuje',player_df['game'].unique()) 
-                if games != 'Wybierz grę, która Cię interesuje':       
+                if games in player_df['game'].unique():       
                     player_df = player_df[player_df['game'] ==  games[0]]
             """
             --------------------------------------------------
