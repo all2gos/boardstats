@@ -167,7 +167,7 @@ if main_menu == 'Statystyki':
                 st.write('Minimalny współczynnik jest znacznie bardziej skomplikowany dla 3,4,5 graczy wynosi kolejno 67,62,60')
     
     if stats_menu == 'Współczynnik skuteczności jako gracz':
-        for player in df.columns:
+        for player in df.columns[2:]:
             player_df = df[df[player].notna()] 
             position_dict = dict()
             for i in range(len(player_df)):
