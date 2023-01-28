@@ -168,4 +168,34 @@ if main_menu == 'Statystyki':
     
     if stats_menu == 'Współczynnik skuteczności jako gracz':
         for player in df.columns:
-            st.write(player, player)
+            player_df = df[df[player].notna()] 
+            position_dict = dict()
+            for i in range(len(player_df)):
+                row = player_df.iloc[i].dropna()            
+                position_list = []
+                for j in range(3,len(row.unique())):
+                    position_list.append(row[j])
+                position_list = sorted(position_list,reverse=True)
+
+                for char in range(len(position_list)):                
+                    if int(position_list[char]) == int(row[player]):
+                        place = char+1
+                        break
+                if place in position_dict:
+                    position_dict[place] += 1
+                else:
+                    position_dict[place] = 1    
+            position_df = (pd.DataFrame(data = position_dict.items(),columns=['miejsce','tyle_razy_gracz_zajal_to_miejsce']))
+            st.write(position_df)
+
+            
+            avg_place = player_df['liczba_graczy'].mean()/2
+            
+            your_place = 0
+            for i in range(len(position_df)):
+                your_place += position_df['miejsce'].iloc[i]*position_df['tyle_razy_gracz_zajal_to_miejsce'].iloc[i]
+            your_place /= len(player_df)
+            """
+            ----------------------------------------------------
+            """
+            st.write('Współczynnik skuteczności jako gracz*',int(avg_place/your_place*100))
