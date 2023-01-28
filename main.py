@@ -201,4 +201,4 @@ if main_menu == 'Statystyki':
                 final_list.append([player,int(avg_place/your_place*100)])
 
         final_list.sort(key=lambda row: (row[1],row[0]),reverse=True)
-        st.write(final_list)
+        st.write(pd.DataFrame(data = final_list, columns=['gracz','pkt_skutecznosci']))
