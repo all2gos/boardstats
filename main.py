@@ -90,7 +90,7 @@ if main_menu == 'Tryb deweloperski':
                 mime='text/csv',)
         if develop_menu == 'Dodaj nowego gracza':
             col = st.text_input('Wpisz nazwe gracza')
-            df_after = df.assign(col=np.nan)
+            df = df.assign(col=np.nan)
             
 
         if develop_menu == 'Todolist':
