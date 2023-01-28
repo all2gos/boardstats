@@ -167,6 +167,7 @@ if main_menu == 'Statystyki':
                 st.write('Minimalny współczynnik jest znacznie bardziej skomplikowany dla 3,4,5 graczy wynosi kolejno 67,62,60')
     
     if stats_menu == 'Współczynnik skuteczności jako gracz':
+        final_list = []
         for player in df.columns[3:]:
             player_df = df[df[player].notna()] 
             if len(player_df) == 0:
@@ -196,7 +197,8 @@ if main_menu == 'Statystyki':
                 for i in range(len(position_df)):
                     your_place += position_df['miejsce'].iloc[i]*position_df['tyle_razy_gracz_zajal_to_miejsce'].iloc[i]
                 your_place /= len(player_df)
-                """
-                ----------------------------------------------------
-                """
-                st.write(player,':',int(avg_place/your_place*100))
+
+                final_list.append([player,int(avg_place/your_place*100)])
+
+        final_list.sort(key=lambda row: (row[1],row[0]),reverse=True)
+        st.write(final_list)
