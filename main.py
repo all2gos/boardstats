@@ -168,7 +168,7 @@ if main_menu == 'Statystyki':
     
     if stats_menu == 'Współczynnik skuteczności jako gracz':
         final_list = []
-        game_filter = st.multiselect('Zawęź do jednej gry')
+        game_filter = st.multiselect('Zawęź do jednej gry',df['game'].unique())
 
         if game_filter:
             df = df[df['game']==game_filter]
