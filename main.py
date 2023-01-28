@@ -68,7 +68,7 @@ if main_menu == 'Tryb deweloperski':
     password = st.text_input('Wprowadź hasło')
     st.write('Jeżeli nie znasz hasła znaczy, że nie jesteś adminem więc żeby coś zrobić w trybie deweloperskim musisz się z nim skontaktować')
     if password == 'dunderystyczny':
-        develop_menu = st.radio('Co chcesz zrobić?', ('Usuń wybrany wiersz','Todolist','Coś innego'))
+        develop_menu = st.radio('Co chcesz zrobić?', ('Usuń wybrany wiersz','Todolist','Coś innego','Dodaj nowego gracza'))
         if develop_menu == 'Usuń wybrany wiersz':
             id = st.text_input('Podaj id wiersza, który chcesz usunąć')
 
@@ -88,6 +88,10 @@ if main_menu == 'Tryb deweloperski':
                 data=csv,
                 file_name='board_df.csv',
                 mime='text/csv',)
+        if develop_menu == 'Dodaj nowego gracza':
+            col = st.text_input('Wpisz nazwe gracza')
+            df_after = df.assign(col=np.nan)
+            
 
         if develop_menu == 'Todolist':
             st.write('Opcja dodawania nowego gracza')
