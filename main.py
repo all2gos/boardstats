@@ -168,33 +168,35 @@ if main_menu == 'Statystyki':
     
     if stats_menu == 'Współczynnik skuteczności jako gracz':
         for player in df.columns[3:]:
-            st.write(player)
             player_df = df[df[player].notna()] 
-            position_dict = dict()
-            for i in range(len(player_df)):
-                row = player_df.iloc[i].dropna()            
-                position_list = []
-                for j in range(3,len(row.unique())):
-                    position_list.append(row[j])
-                position_list = sorted(position_list,reverse=True)
+            if len(player_df) == 0:
+                continue
+            else:
+                position_dict = dict()
+                for i in range(len(player_df)):
+                    row = player_df.iloc[i].dropna()            
+                    position_list = []
+                    for j in range(3,len(row.unique())):
+                        position_list.append(row[j])
+                    position_list = sorted(position_list,reverse=True)
 
-                for char in range(len(position_list)):                
-                    if int(position_list[char]) == int(row[player]):
-                        place = char+1
-                        break
-                if place in position_dict:
-                    position_dict[place] += 1
-                else:
-                    position_dict[place] = 1    
-            position_df = (pd.DataFrame(data = position_dict.items(),columns=['miejsce','tyle_razy_gracz_zajal_to_miejsce']))
-            
-            avg_place = player_df['liczba_graczy'].mean()/2
-            
-            your_place = 0
-            for i in range(len(position_df)):
-                your_place += position_df['miejsce'].iloc[i]*position_df['tyle_razy_gracz_zajal_to_miejsce'].iloc[i]
-            your_place /= len(player_df)
-            """
-            ----------------------------------------------------
-            """
-            st.write(player,':',int(avg_place/your_place*100))
+                    for char in range(len(position_list)):                
+                        if int(position_list[char]) == int(row[player]):
+                            place = char+1
+                            break
+                    if place in position_dict:
+                        position_dict[place] += 1
+                    else:
+                        position_dict[place] = 1    
+                position_df = (pd.DataFrame(data = position_dict.items(),columns=['miejsce','tyle_razy_gracz_zajal_to_miejsce']))
+                
+                avg_place = player_df['liczba_graczy'].mean()/2
+                
+                your_place = 0
+                for i in range(len(position_df)):
+                    your_place += position_df['miejsce'].iloc[i]*position_df['tyle_razy_gracz_zajal_to_miejsce'].iloc[i]
+                your_place /= len(player_df)
+                """
+                ----------------------------------------------------
+                """
+                st.write(player,':',int(avg_place/your_place*100))
