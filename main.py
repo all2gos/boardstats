@@ -19,7 +19,7 @@ main_dict = dict()
 main_menu = st.radio('Co chcesz zrobić?', ('Wyświetl całą tabelę','Wprowadź wyniki przeprowadzonej gry','Statystyki','Tryb deweloperski'))
 
 if main_menu == 'Wyświetl całą tabelę':
-    st.write(df.dropna(axis='columns', how='all')
+    st.write(df.dropna(axis='columns', how='all'))
 
 if main_menu == 'Wprowadź wyniki przeprowadzonej gry':    
     data = st.date_input('Na początku podaj datę rozgrywki')    
