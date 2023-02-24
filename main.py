@@ -20,6 +20,13 @@ main_menu = st.radio('Co chcesz zrobić?', ('Wyświetl całą tabelę','Wprowad�
 
 if main_menu == 'Wyświetl całą tabelę':
     st.write(df.dropna(axis='columns', how='all'))
+    #pobieranie
+    csv = convert_df(df)
+    st.download_button(
+    label="Pobierz backup",
+    data=csv,
+    file_name='board_df.csv',
+    mime='text/csv',)
 
 if main_menu == 'Wprowadź wyniki przeprowadzonej gry':    
     data = st.date_input('Na początku podaj datę rozgrywki')    
