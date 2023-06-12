@@ -14,8 +14,9 @@ def convert_df(df):
 def load_data(sheets_url):
     csv_url = sheets_url.replace("/edit#gid=", "/export?format=csv&gid=")
     return pd.read_csv(csv_url, header=None, on_bad_lines='skip')
-df = load_data(st.secrets["public_gsheets_url"])
+#df = load_data(st.secrets["public_gsheets_url"])
 
+df = pd.read_csv('board_df.csv')
 if 'Unnamed: 0' in df.columns:
     df = df.drop(['Unnamed: 0'],axis=1)
 
