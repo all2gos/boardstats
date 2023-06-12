@@ -16,9 +16,8 @@ def load_data(sheets_url):
     return pd.read_csv(csv_url, on_bad_lines='skip')
 
 df = load_data(st.secrets["public_gsheets_url"])
+st.write(df)
 
-for row in df:
-    st.write(row)
 if 'Unnamed: 0' in df.columns:
     df = df.drop(['Unnamed: 0'],axis=1)
 
