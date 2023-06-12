@@ -8,6 +8,19 @@ st.set_page_config(page_title='Boardstats', page_icon=':game_die:')
 def convert_df(df):    
     return df.to_csv().encode('utf-8')
 
+
+#testowe wczytywanie excela
+@st.cache_data(ttl=600)
+def load_data(sheets_url):
+    csv_url = sheets_url.replace("/edit#gid=", "/export?format=csv&gid=")
+    return pd.read_csv(csv_url)
+
+test = load_data(st.secrets["public_gsheets_url"])
+
+# Print results.
+for row in test.itertuples():
+    st.write(f"{row.name} has a :{row.pet}:")
+
 df = pd.read_csv('board_df.csv')
 if 'Unnamed: 0' in df.columns:
     df = df.drop(['Unnamed: 0'],axis=1)
