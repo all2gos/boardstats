@@ -13,7 +13,7 @@ def convert_df(df):
 @st.cache_data(ttl=600)
 def load_data(sheets_url):
     csv_url = sheets_url
-    return pd.read_excel(csv_url)
+    return pd.read_excel(csv_url, engine='openpyxl')
 
 df = load_data(st.secrets["public_gsheets_url"])
 st.write(df)
