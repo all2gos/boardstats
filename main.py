@@ -12,8 +12,8 @@ def convert_df(df):
 #testowe wczytywanie excela
 @st.cache_data(ttl=600)
 def load_data(sheets_url):
-    csv_url = sheets_url.replace("/edit#gid=", "/export?format=csv&gid=")
-    return pd.read_csv(csv_url, sep='\t',on_bad_lines='warn')
+    csv_url = sheets_url
+    return pd.read_excel(csv_url)
 
 df = load_data(st.secrets["public_gsheets_url"])
 st.write(df)
