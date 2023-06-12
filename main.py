@@ -19,5 +19,5 @@ test = load_data(st.secrets["public_gsheets_url"])
 
 # Print results.
 for row in test.itertuples():
-    st.write(f"{row.name} has a :{row.pet}:")
+    st.write(row)
 
