@@ -143,7 +143,7 @@ if main_menu == 'Statystyki':
 
 
     if stats_menu == 'ELO':
-        elo_button = st.radio('Jak to działa?','ELO Główna Tabela')
+        elo_button = st.radio('',('Jak to działa?','ELO Główna Tabela'))
 
         if elo_button == 'Jak to działa?':
             """
