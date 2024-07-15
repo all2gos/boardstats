@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import streamlit as st
+import copy
 st.set_page_config(page_title='Boardstats', page_icon=':game_die:')
 
 #do pobierania
@@ -15,6 +16,61 @@ def load_data(sheets_url):
     csv_url = sheets_url.replace("/edit#gid=", "/export?format=csv&gid=")
     return pd.read_csv(csv_url, on_bad_lines='skip', index_col=0)
 df = load_data(st.secrets["public_gsheets_url"])
+
+def elo(row, elo_table):
+
+  #czynniki do dowolnej modyfikacji:
+  alfa = 400
+  k = 64
+  l = dict(row.dropna())
+
+  players = list(l)[3:]
+  elo_change_list = {}
+  max_positive_change = 0
+  max_negative_change = 0
+  for p in players:
+    #liczenie aktualnego wyniku
+    actual_score = 0
+    expected_score = 0
+    for oponent in players:
+
+      if oponent != p:
+        if np.isnan(elo_table[oponent]):
+          elo_table[oponent] = 1000
+
+          print(oponent, 'zyskał ranking 1000')
+        elif np.isnan(elo_table[p]):
+          elo_table[p] = 1000
+          print(p, 'zyskał ranking 1000')
+
+        if l[p] > l[oponent]:
+          actual_score+=1
+        elif l[p] == l[oponent]:
+          actual_score +=0.5
+        #liczenie oczekiwanego wyniku
+        expected_score += 1/(1+10**((elo_table[oponent]-elo_table[p])/alfa))
+
+        #oczekiwana zmiana elo
+
+      elo_change_list[p] = k*(actual_score-expected_score)
+
+      #print(f"Aktualny wynik {p} to {actual_score}, podczas gdy oczekiwany wynik to {round(expected_score,2)}, zmiana elo wynosi {round(elo_change_list[p],2)}")
+  #aktualizacja elo: w nowej pętli, żeby wszystko odbywało się po wyliczeniu oczekiwanych wyników
+  for p in players:
+
+    #zliczanie, ktora to jest gra danego gracza overall
+    game_played = len(all[p][all['date'] <= l['date']].dropna())
+    #print(f"gracz {p} do dnia {l['date']} rozegrał {game_played} gier")
+
+    #zliczanie, ktora to jest rozgrywka TEJ KONKRETNEJ gry TEGO KONKRETNEGO GRACZA
+    that_game_played = len(all[p][(all['date'] <= l['date']) & (all['game'] == l['game'])].dropna())
+    #czynnik amortyzujacy dla swiezych graczy:
+
+    change_reduction = 0.2 if that_game_played == 1 else (0.5 if that_game_played == 2 else (0.8 if that_game_played == 3 else 1))
+    #print(f"gracz {p} do dnia {l['date']} rozegrał {that_game_played} rozgrywek gry {l['game']}, ale w sumie rozgeral {game_played} gier, w zwiazku z czym redukcja zmiany wynosi {change_reduction}")
+    #elo_table[p] += round(elo_change_list[p],2)
+    elo_table[p] += round(max(np.log(1/game_played)+4,1)*elo_change_list[p]*change_reduction/(l['liczba_graczy']-1),1)
+  return elo_table
 
 """### Boardstats"""
 
@@ -228,3 +284,18 @@ Kalibracja parametrów odbywała się poprzez dopisanie do bazy danych graczy te
 
 ~Za konceptualizację odpowiada all2 i Jaho-Wojownik xD
                         """)
+        if elo_button == 'ELO Główna Tabela':
+            elo_table = dict()
+            for p in all.columns[3:]:
+                elo_table[p] = np.nan
+
+            elo_history = [copy.deepcopy(elo_table)]  # Używamy deepcopy do stworzenia głębokiej kopii
+
+            for i in range(len(all)):
+                #print(all['game'].iloc[i], all['date'].iloc[i])
+                #print(elo_table)
+                elo_table = elo(all.iloc[i], elo_table)
+                elo_history.append(copy.deepcopy(elo_table))  # Znowu używamy deepcopy
+                elo_df = pd.DataFrame(data=elo_history)
+                st.write(elo_df)
+                
