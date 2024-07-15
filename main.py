@@ -59,11 +59,11 @@ def elo(row, elo_table):
   for p in players:
 
     #zliczanie, ktora to jest gra danego gracza overall
-    game_played = len(all[p][all['date'] <= l['date']].dropna())
+    game_played = len(df[p][df['date'] <= l['date']].dropna())
     #print(f"gracz {p} do dnia {l['date']} rozegrał {game_played} gier")
 
     #zliczanie, ktora to jest rozgrywka TEJ KONKRETNEJ gry TEGO KONKRETNEGO GRACZA
-    that_game_played = len(all[p][(all['date'] <= l['date']) & (all['game'] == l['game'])].dropna())
+    that_game_played = len(df[p][(df['date'] <= l['date']) & (df['game'] == l['game'])].dropna())
     #czynnik amortyzujacy dla swiezych graczy:
 
     change_reduction = 0.2 if that_game_played == 1 else (0.5 if that_game_played == 2 else (0.8 if that_game_played == 3 else 1))
