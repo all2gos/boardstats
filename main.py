@@ -143,7 +143,6 @@ if main_menu == 'Statystyki':
                 for i in range(len(position_df)):
                     your_place += position_df['miejsce'].iloc[i]*position_df['tyle_razy_gracz_zajal_to_miejsce'].iloc[i]
                 your_place /= len(player_df)
-                st.write(avg_place,your_place)
                 final_list.append([player,int(avg_place/your_place*100)])
 
         final_list.sort(key=lambda row: (row[1],row[0]),reverse=True)
