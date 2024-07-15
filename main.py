@@ -40,7 +40,7 @@ if main_menu == 'Statystyki':
     rows[0].dataframe(df['game'].value_counts())
     rows[1].markdown("#### Najczęściej grający gracze ")
     df_modified = df.drop(['game', 'date', 'liczba_graczy'], axis=1).count().reset_index(name='count').sort_values(['count'], ascending=False)
-    rows[1].dataframe(df_modified.reset_index(drop=True, inplace=True))
+    rows[1].dataframe(df_modified.reset_index(drop=True))
     if stats_menu == 'Staty dla danego gracza':
         player = st.text_input('Wybierz gracza')  
         
