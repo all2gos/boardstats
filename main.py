@@ -225,4 +225,6 @@ W przypadku, gdy dany gracz rozgrywa swoją pierwszą wpisaną do bazy rozgrywk�
 ### Kalibracja parametrów
 
 Kalibracja parametrów odbywała się poprzez dopisanie do bazy danych graczy teoretycznych: jeden z nich zawsze wygrywał, drugi zawsze przegrywał. Ich ELO po 86 grach wynosiło około 1500 i 500. Początkowo zamierzano stworzyć zakres 200-2000, ale okazało się, że rankingi tych graczy stają się tak skrajne, że nie zmieniają się znacząco przy pojedynkach z graczami o rankingu około 1000.
-""")
+
+~Za konceptualizację odpowiada all2 i Jaho-Wojownik xD
+                        """)
