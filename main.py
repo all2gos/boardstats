@@ -298,4 +298,14 @@ Kalibracja parametrów odbywała się poprzez dopisanie do bazy danych graczy te
                 elo_history.append(copy.deepcopy(elo_table))  # Znowu używamy deepcopy
                 elo_df = pd.DataFrame(data=elo_history)
             st.write(elo_df)
+
+            elo_stat_button = st.radio('Dodatkowe statystyki',('Aktualne ELO','Maksymalne ELO w historii'))
+
+            if elo_stat_button == 'Aktualne ELO':
+                actual_elo = pd.DataFrame(elo_df.iloc[-1].transpose()).rename(columns = {len(elo_df)-1:'max elo'}).sort_values(by='max elo', ascending=False)
+                st.write(actual_elo)
+            
+            if elo_stat_button == 'Maksymalne ELO w historii':
+                max_elo = pd.DataFrame(elo_df.max()).rename(columns={0:'max_elo'}).sort_values(by='max_elo',ascending=False)
+                st.write(max_elo[max_elo['max_elo']>1000])
                 
