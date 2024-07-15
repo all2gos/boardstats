@@ -199,7 +199,7 @@ if main_menu == 'Statystyki':
 
 
     if stats_menu == 'ELO':
-        elo_button = st.radio('',('Jak to działa?','ELO Główna Tabela'))
+        elo_button = st.radio('',('ELO Główna Tabela','Jak to działa?'))
 
         if elo_button == 'Jak to działa?':
             st.markdown("""
@@ -297,5 +297,5 @@ Kalibracja parametrów odbywała się poprzez dopisanie do bazy danych graczy te
                 elo_table = elo(df.iloc[i], elo_table)
                 elo_history.append(copy.deepcopy(elo_table))  # Znowu używamy deepcopy
                 elo_df = pd.DataFrame(data=elo_history)
-            st.write(elo_df)
+            st.write(elo_df[-1])
                 
