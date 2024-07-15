@@ -286,7 +286,7 @@ Kalibracja parametrów odbywała się poprzez dopisanie do bazy danych graczy te
                         """)
         if elo_button == 'ELO Główna Tabela':
             elo_table = dict()
-            for p in all.columns[3:]:
+            for p in df.columns[3:]:
                 elo_table[p] = np.nan
 
             elo_history = [copy.deepcopy(elo_table)]  # Używamy deepcopy do stworzenia głębokiej kopii
