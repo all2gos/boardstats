@@ -24,23 +24,16 @@ main_menu = st.radio('Co chcesz zrobić?', ('Wyświetl całą tabelę','Statysty
 
 if main_menu == 'Wyświetl całą tabelę':
     st.write(df.dropna(axis='columns', how='all'))
-    #pobieranie
-    csv = convert_df(df)
-    st.download_button(
-    label="Pobierz backup",
-    data=csv,
-    file_name='board_df.csv',
-    mime='text/csv',)
 
-    
 if main_menu == 'Statystyki':
-    stats_menu = st.radio('Jakie statystyki chcesz wyświetlić?',('Staty dla danego gracza','Współczynniki skuteczności'))
-    rows = st.columns(2)
-    rows[0].markdown("#### Najczęściej grane gry")
-    rows[0].dataframe(df['game'].value_counts())
-    rows[1].markdown("#### Najczęściej grający gracze ")
-    df_modified = df.drop(['game', 'date', 'liczba_graczy'], axis=1).count().reset_index(name='count').sort_values(['count'], ascending=False)
-    rows[1].dataframe(df_modified.reset_index(drop=True))
+    stats_menu = st.radio('Jakie statystyki chcesz wyświetlić?',('Ogólne','Staty dla danego gracza','ELO','WSJG'))
+    if stats_menu == 'Ogólne':
+        rows = st.columns(2)
+        rows[0].markdown("#### Najczęściej grane gry")
+        rows[0].dataframe(df['game'].value_counts())
+        rows[1].markdown("#### Najczęściej grający gracze ")
+        df_modified = df.drop(['game', 'date', 'liczba_graczy'], axis=1).count().reset_index(name='count').sort_values(['count'], ascending=False)
+        rows[1].dataframe(df_modified.reset_index(drop=True))
     if stats_menu == 'Staty dla danego gracza':
         player = st.text_input('Wybierz gracza')  
         
@@ -108,7 +101,8 @@ if main_menu == 'Statystyki':
                 st.write('Weźmy np brassa: pkt skuteczności i ilość zagranych klej kolejno dla janka,mnie,mileny,gosii,kasi, zosi, matiego i taty janka to:')
                 st.write('129:11,100:6,88:4,85:4,78:11,64:10,60:4,58:7')
     
-    if stats_menu == 'Współczynniki skuteczności':
+    if stats_menu == 'WSJG':
+        st.write('WSJG czyli współczynnik skuteczności jako gracz to pierwszy wskaźnik, który implementowaliśmy na potrzeby boardstatsa. Posiada jednak pewne ograniczenia, ze względu na które, postanowiliśmy zaimplementować system ELO. Obecnie traktujemy WSJG jako relikt przeszłości, ale po co go wyrzucać jak nikomu nie przeszkadza cnie')
         final_list = []
         game_filter = st.text_input('Zawęź do jednej gry')
         st.write('Dostępne gry:',df['game'].unique())
@@ -149,4 +143,6 @@ if main_menu == 'Statystyki':
         st.write(pd.DataFrame(data = final_list, columns=['gracz','pkt_skutecznosci']))
 
 
+    if stats_menu == 'ELO':
+        pass
   
