@@ -91,7 +91,7 @@ if main_menu == 'Statystyki':
         df_modified = df.drop(['game', 'date', 'liczba_graczy'], axis=1).count().reset_index(name='count').sort_values(['count'], ascending=False)
         rows[1].dataframe(df_modified.reset_index(drop=True))
     if stats_menu == 'Staty dla danego gracza':
-        player = st.selectbox('Wybierz gracza', df['player'].unique())  
+        player = st.text_input('Wybierz gracza')  
         
         if player in df.columns:               
             player_df = df[df[player].notna()]            
