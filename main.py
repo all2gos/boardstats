@@ -146,91 +146,83 @@ if main_menu == 'Statystyki':
         elo_button = st.radio('',('Jak to działa?','ELO Główna Tabela'))
 
         if elo_button == 'Jak to działa?':
-            """
-            Zasada działania ELO:
+            st.markdown("""
+### Podstawowe zasady:
+1. ELO startowe to 1000 pkt.
+2. Każda rozgrywka na potrzeby ELO jest liczona jako pojedyncze pojedynki 1 vs 1 we wszystkich kombinacjach. Na przykład, gdy grają trzej gracze (A, B, C), skrypt sprawdza wyniki indywidualnych meczy A-B, B-C i A-C i traktuje je jako odbyte jednocześnie.
+3. Ranking ELO nie uwzględnia tego, jak silna jest wygrana (podobnie jak w szachach, gdzie "siła" wygranej jest subiektywna, a tutaj mamy ją wyrażoną w punktach zwycięstwa).
 
-1. ELO startowe to 1000 pkt
-2. Każdorazowa rozgrywka na potrzeby ELO jest liczona jako pojedyczne pojedynki 1 vs 1 we wszystkich kombinacja: np. gdy grają trzej gracze (ABC) skrypt sprawdza wyniki indywidualnych meczy A-B, B-C, i A-C i traktuje je jako odbyte jednocześnie (analogia do meczy na pojedycznym turnieju szachowym)
-3. Ranking ELO nie uwzględnia tego jak silna jest wygrana (podobnie jak w szachach, ale w szachach "siła" wygranej jest dość subiektywna, a tutaj mamy ją wyrażoną w pkt zwycięstwa najczęściej)
-
-Wzory liczenia ELO:
+### Wzory liczenia ELO:
 
 Przykład:
 
 Gracz A ma ranking 1613 i:
-
-a) przegrał z graczem 1603
-
-b) zremisował z graczem 1477
-
-c) wygrał z graczem 1388
-
-d) wygrał z graczem 1586
-
-e) przegrał z graczem 1720
+- przegrał z graczem 1603
+- zremisował z graczem 1477
+- wygrał z graczem 1388
+- wygrał z graczem 1586
+- przegrał z graczem 1720
 
 Aktualny wynik tego gracza to (0+0,5+1+1+0) = 2.5
 
-Podczas, gdy jego faktyczny wynik powinien wynosić:
+Podczas, gdy jego oczekiwany wynik powinien wynosić:
 
-$$E_A = \frac{1}{1+10^{(R_B-R_A)/\alpha}}$$
+$$
+E_A = \\frac{1}{1 + 10^{(R_B - R_A) / \\alpha}}
+$$
 
 gdzie:
+- \( R_B, R_A \) to kolejno aktualne rankingi przeciwnika i gracza A
+- wartość \( \\alpha \) jest wartością swobodną, którą można kalibrować, ale przyjmujemy sugerowaną wartość 400.
 
-$R_B, R_A$ to kolejno aktualne rankingi przeciwnika i gracza A
+Przykładowo dla pojedynku A-B oczekiwany wynik to:
 
-wartość $\alpha$ jest wartością swobodną i można ją dowolnie kalibrować, ja w tym miejscu jednak bym niczego nie próbował i zostawił ją na wartości sugerowanej czyli 400
+$$
+E_A = \\frac{1}{1 + 10^{(1603 - 1613) / 400}} = 0.51
+$$
 
-Czyli przykładowo dla pojedynku A-B oczekiwany wynik to:
-
-$$E_A = \frac{1}{1+10^{(1603-1613)/400}}=0.51$$
-
-Kolejne oczekiwane wyniki pojedynkow to: 0.69, 0.79, 0.54, 0.35, co w całości sumuje się do 2,88
+Kolejne oczekiwane wyniki pojedynków to: 0.69, 0.79, 0.54, 0.35, co w całości sumuje się do 2.88.
 
 Ranking gracza A zostaje zaktualizowany przy pomocy następującego wzoru:
 
-$$N_A = R_A + 32*(A_A-E_A) = 1613 + k*(2,5-2,88)=1601$$
+$$
+N_A = R_A + k (A_A - E_A) = 1613 + 64 (2.5 - 2.88) = 1601
+$$
 
-Ponownie $k$, to wartość swobodna i może być dowolnie kalibrowana. Ja w tym miejscu chciałbym osiągnąć efekt podobny jak w szachach; czyli wygrana z osobą o zbliżonym rankingu to 8-10 oczek w górę. Należy tutaj jednak zwrócić uwagę na istotny czynnik: rozegranie pojedynczej planszówki zawsze składa się z kilku pojedynków. Efektem tego jest sytuacja, w której w przypadku gry trzyosobowej rozstęp zmiany ELO gracza to dwukrotność takiej zmiany w pojedycznym pojedynku, a w przypadku gry pięcioosobowej: czterokrotność. Czynnik ten został uwzględniony w skrypcie i każdorazowo wyznaczona zmiana ELO, która jest sumą zmian wszystkich takich pojedynków jest dzielona przez liczbę odbytych pojedynków.
-
-Wartość $k$ została wyznaczona na 64
-
-I to stanowi bazę wyliczania ELO, poza tym stosujemy następujące mechanizmy:
+Wartość \( k \) została ustalona na 64.
 
 ### Zwiększanie zmiany ELO dla pierwszych rozgrywek
-Celem tego mechanizmu jest możliwie szybkie umiejscowienie wszystkich w dobrych przedziałach ELO (bo do bazy danych może być wpisana osoba, która właśnie rozgrywa swoją pierwszą planszówkę jak i osoba, która nie dość, że ma lata doświadczenia to jeszcze gra często i dobrze)
 
-Moją propozycją jest stosowanie mnożnika w postaci:
+Celem tego mechanizmu jest szybkie umiejscowienie wszystkich graczy w dobrych przedziałach ELO. Stosujemy mnożnik w postaci:
 
-$$f(x) = max\left[log\left(\frac{1}{x}\right)+4, 1]\right]$$
+$$
+f(x) = \\max[\\log(\\frac{1}{x}) + 4, 1]
+$$
 
 Funkcja ta przyjmuje następujące wartości:
 
-|x|f(x)|x|f(x)|
-|---|---|---|---|
-|1|4.00|13|1.44|
-|2|3.30|14|1.36|
-|3|2.90|15|1.29|
-|4|2.61|16|1.23|
-|5|2.39|17|1.17|
-|6|2.21|18|1.11|
-|7|2.05|19|1.06|
-|8|1.92|20|1.004|
-|9|1.80|21|1.00|
-|10|1.70|22|1.00|
-|11|1.60|23|1.00|
-|12|1.52|24|1.00|
+| x  | f(x) | x  | f(x) |
+|----|------|----|------|
+| 1  | 4.00 | 13 | 1.44 |
+| 2  | 3.30 | 14 | 1.36 |
+| 3  | 2.90 | 15 | 1.29 |
+| 4  | 2.61 | 16 | 1.23 |
+| 5  | 2.39 | 17 | 1.17 |
+| 6  | 2.21 | 18 | 1.11 |
+| 7  | 2.05 | 19 | 1.06 |
+| 8  | 1.92 | 20 | 1.004|
+| 9  | 1.80 | 21 | 1.00 |
+| 10 | 1.70 | 22 | 1.00 |
+| 11 | 1.60 | 23 | 1.00 |
+| 12 | 1.52 | 24 | 1.00 |
 
-Skrypt sprawdza każdorazowo, która to jest rozgrywka danego gracza wpisana do bazy i mnoży jego wyliczoną zmianę ELO przez odpowiadający czynnik.
+Skrypt sprawdza, która to jest rozgrywka danego gracza wpisana do bazy i mnoży jego wyliczoną zmianę ELO przez odpowiadający czynnik.
 
 ### Amortyzacja zmiany ELO dla gier nowo rozgrywanych
 
-W przypadku, gdy dany gracz rozgrywa swoją pierwsza wpisaną do bazy rozgrywkę danej planszówki jego zmiana ELO zostaje pomniejszona o 80%, dla drugiej i trzeciej rozgrywki tej samej gry redukcje tych zmian wynoszą kolejno: 50% oraz 20%. Mechanizm ten został zastosowany jako swoisty wentyl bezpieczeństwa dla graczy ze zbudowanym ELO, tak żeby nieoczekiwane wygrane czy przegrane w grze, której zasady dopiero przez tę osobę są poznawane nie wpływały w sposób znaczny na siłę gry.
+W przypadku, gdy dany gracz rozgrywa swoją pierwszą wpisaną do bazy rozgrywkę danej planszówki, jego zmiana ELO zostaje pomniejszona o 80%. Dla drugiej i trzeciej rozgrywki tej samej gry redukcje tych zmian wynoszą kolejno: 50% oraz 20%. Mechanizm ten działa jako swoisty wentyl bezpieczeństwa dla graczy ze zbudowanym ELO, aby nieoczekiwane wygrane czy przegrane w nowej grze nie wpływały znacząco na ich ranking.
 
-Dokładnie w takiej formie ELO zostaje zaimplementowane na potrzeby boardstatsa.
+### Kalibracja parametrów
 
-Warto wspomnieć, że kalibrowanie parametrów odbywało się poprzez dopisane do bazy danych graczy teoretycznych: jeden z nich zawsze wygrywał, drugi zawsze przegrywał. Ich ELO po 86 grach wynosiło około 1500 i 500. Chciałem początkowo stworzyć zakres 200-2000, ale w trakcie testowania zorientowałem się, że od pewnego momentu rankingi tych graczy są tak skrajne, że nie ulegałyby żadnej większej zmianie przy pojedynkach z graczami, którzy jednak oscylują w okolicy siły gry ~1000.
-
-
-            """
-  
+Kalibracja parametrów odbywała się poprzez dopisanie do bazy danych graczy teoretycznych: jeden z nich zawsze wygrywał, drugi zawsze przegrywał. Ich ELO po 86 grach wynosiło około 1500 i 500. Początkowo zamierzano stworzyć zakres 200-2000, ale okazało się, że rankingi tych graczy stają się tak skrajne, że nie zmieniają się znacząco przy pojedynkach z graczami o rankingu około 1000.
+""")
