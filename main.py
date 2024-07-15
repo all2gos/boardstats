@@ -55,7 +55,6 @@ if main_menu == 'Statystyki':
             """
             st.write('Spis wszystkich gier, w które zagrał dany gracz')
             st.write(player_df.dropna(axis='columns', how='all'))
-            st.write('Frekwencja: (nie działa filtrowanie growe)',int(len(player_df)/len(df)*100),'%')
             st.write('Najczęściej grane gry:', player_df['game'].value_counts())
             st.write('Statystyki odnośnie zajmowanego miejsca')
             position_dict = dict()
@@ -87,7 +86,7 @@ if main_menu == 'Statystyki':
             """
             ----------------------------------------------------
             """
-            st.write('Współczynnik skuteczności jako gracz*',int(avg_place/your_place*100))
+            st.write(f"Współczynnik skuteczności jako gracz*{int(avg_place/your_place*100):.2f}")
             if st.button('*Chcę wiedzieć jak to jest liczone'):
                 st.write('Współczynnik skuteczności jako gracz to stosunek dwóch składowych:')
                 st.write('- średnio zajmowanego przez gracza miejsca')
