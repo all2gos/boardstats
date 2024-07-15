@@ -104,7 +104,7 @@ if main_menu == 'Statystyki':
     if stats_menu == 'WSJG':
         st.write('WSJG czyli współczynnik skuteczności jako gracz to pierwszy wskaźnik, który implementowaliśmy na potrzeby boardstatsa. Posiada jednak pewne ograniczenia, ze względu na które, postanowiliśmy zaimplementować system ELO. Obecnie traktujemy WSJG jako relikt przeszłości, ale po co go wyrzucać jak nikomu nie przeszkadza cnie')
         final_list = []
-        game_filter = st.selectbox('Zawęź do jednej gry', ['wszystkie gry'] + df['game'].unique())
+        game_filter = st.selectbox('Zawęź do jednej gry', ['wszystkie gry'],df['game'].unique())
         if game_filter is not 'wszystkie gry':
             df = df[df['game']==game_filter]
         for player in df.columns[3:]:
