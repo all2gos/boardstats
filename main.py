@@ -310,15 +310,13 @@ Kalibracja parametrów odbywała się poprzez dopisanie do bazy danych graczy te
                 st.write(max_elo[max_elo['max_elo']>1000])
             
 
-            elo_plot = st.button('Wykres ELO')
-            if elo_plot:
-                players = st.multiselect('Zaznacz, jakich graczy ELO chcesz śledzić na wykresie', elo_df.columns)
-                st.write(players)
-                fig, ax = plt.subplots()
-                ax = elo_df.plot(ax=ax, legend=False)
-                ax.set_ylim(700,1400)
-                ax.set_xlabel('Numer rozgrywki')
-                ax.set_ylabel('ELO')
-                st.pyplot(fig)
+            players = st.multiselect('Zaznacz, jakich graczy ELO chcesz śledzić na wykresie', elo_df.columns)
+            st.write(players)
+            fig, ax = plt.subplots()
+            ax = elo_df[players].plot(ax=ax, legend=False)
+            ax.set_ylim(700,1400)
+            ax.set_xlabel('Numer rozgrywki')
+            ax.set_ylabel('ELO')
+            st.pyplot(fig)
             st.write('Historia zmian ELO')
             st.write(elo_df)
