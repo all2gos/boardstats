@@ -312,7 +312,8 @@ Kalibracja parametrów odbywała się poprzez dopisanie do bazy danych graczy te
 
             elo_plot = st.button('Wykres ELO')
             if elo_plot:
-                players = st.checkbox('Zaznacz, jakich graczy ELO chcesz śledzić na wykresie', elo_df.columns)
+                players = st.multiselect('Zaznacz, jakich graczy ELO chcesz śledzić na wykresie', elo_df.columns)
+                st.write(players)
                 fig, ax = plt.subplots()
                 ax = elo_df.plot(ax=ax, legend=False)
                 ax.set_ylim(700,1400)
