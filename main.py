@@ -314,7 +314,7 @@ Kalibracja parametrów odbywała się poprzez dopisanie do bazy danych graczy te
             st.write(players)
             fig, ax = plt.subplots()
             ax = elo_df[players].plot(ax=ax, legend=False)
-            ax.set_ylim(min(elo_df[players]),1350)
+            ax.set_ylim(elo_df[players].min().min()-10,elo_df[players].max().max()+10)
             ax.set_xlabel('Numer rozgrywki')
             ax.set_ylabel('ELO')
             if players != []: 
