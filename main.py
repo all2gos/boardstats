@@ -313,7 +313,7 @@ Kalibracja parametrów odbywała się poprzez dopisanie do bazy danych graczy te
             elo_plot = st.button('Wykres ELO')
             if elo_plot:
                 fig, ax = plt.subplots()
-                ax.plot(x=elo_df.index, y=elo_df['Raf Stottko'])
+                ax = elo_df.plot(ax=ax, legend=False)
                 ax.set_ylim(700,1400)
                 st.pyplot(ax)
             st.write('Historia zmian ELO')
