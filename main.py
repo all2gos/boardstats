@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import streamlit as st
 import copy
+import matplotlib.pyplot as plt
 st.set_page_config(page_title='Boardstats', page_icon=':game_die:')
 
 #do pobierania
@@ -311,7 +312,8 @@ Kalibracja parametrów odbywała się poprzez dopisanie do bazy danych graczy te
 
             elo_plot = st.button('Wykres ELO')
             if elo_plot:
-                st.line_chart(elo_df)
-                
+                ax = st.line_chart(elo_df)
+                ax.set_ylim(700,1400)
+                st.pyplot(ax)
             st.write('Historia zmian ELO')
             st.write(elo_df)
