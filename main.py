@@ -317,6 +317,9 @@ Kalibracja parametrów odbywała się poprzez dopisanie do bazy danych graczy te
             ax.set_ylim(min(elo_df[players]),1350)
             ax.set_xlabel('Numer rozgrywki')
             ax.set_ylabel('ELO')
-            st.pyplot(fig)
+            if players != []: 
+                st.pyplot(fig) 
+            else: 
+                st.write('Aby pojawił się wykres musisz wybrać conajmniej jednego gracza')
             st.write('Historia zmian ELO')
             st.write(elo_df)
