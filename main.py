@@ -3,6 +3,7 @@ import numpy as np
 import streamlit as st
 import copy
 import matplotlib.pyplot as plt
+import datetime as dt
 st.set_page_config(page_title='Boardstats', page_icon=':game_die:')
 
 #do pobierania
@@ -304,11 +305,22 @@ Kalibracja parametrów odbywała się poprzez dopisanie do bazy danych graczy te
             if elo_stat_button == 'Aktualne ELO':
                 actual_elo = pd.DataFrame(elo_df.iloc[-1].transpose()).rename(columns = {len(elo_df)-1:'max elo'}).sort_values(by='max elo', ascending=False)
                 st.write(actual_elo)
-            
+
+                
             if elo_stat_button == 'Maksymalne ELO w historii':
                 max_elo = pd.DataFrame(elo_df.max()).rename(columns={0:'max_elo'}).sort_values(by='max_elo',ascending=False)
                 st.write(max_elo[max_elo['max_elo']>1000])
             
+            elo2024 = st.button('Wyświetl ELO liczone od początku 2024 roku')
+
+            if elo2024:
+                tmp = df.copy()
+                tmp['date'] == pd.to_datetime(tmp['date'])
+                tmp['year'] = tmp['date'].dt.to_period('Y')
+
+                tmp = tmp[tmp['year'] == '2024']
+
+                st.write(tmp)
 
             players = st.multiselect('Zaznacz, jakich graczy ELO chcesz śledzić na wykresie', elo_df.columns)
             st.write(players)
