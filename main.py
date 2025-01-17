@@ -315,7 +315,7 @@ Kalibracja parametrów odbywała się poprzez dopisanie do bazy danych graczy te
 
             if elo2024:
                 tmp = df.copy()
-                tmp['date'] == pd.to_datetime(tmp['date'])
+                tmp['date'] = pd.to_datetime(tmp['date'], format='%d.%m.%Y')
                 tmp['year'] = tmp['date'].dt.to_period('Y')
 
                 tmp = tmp[tmp['year'] == '2024']
@@ -323,7 +323,6 @@ Kalibracja parametrów odbywała się poprzez dopisanie do bazy danych graczy te
                 st.write(tmp)
 
             players = st.multiselect('Zaznacz, jakich graczy ELO chcesz śledzić na wykresie', elo_df.columns)
-            st.write(players)
             fig, ax = plt.subplots()
             ax = elo_df[players].plot(ax=ax, legend=False)
             ax.set_ylim(elo_df[players].min().min()-10,elo_df[players].max().max()+10)
