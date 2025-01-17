@@ -293,6 +293,16 @@ Kalibracja parametrów odbywała się poprzez dopisanie do bazy danych graczy te
 
             elo_history = [copy.deepcopy(elo_table)]  # Używamy deepcopy do stworzenia głębokiej kopii
 
+
+            league = st.radio('Wybierz, jeżeli chcesz zobaczyć ELO dla konkretnego roku',('Open',2023,2024,2025))
+
+            if league != 'Open':
+                df['date'] = pd.to_datetime(df['date'], format='%d.%m.%Y')
+                df['year'] = df['date'].dt.to_period('Y')
+                df = df[df['year'] == league]
+
+            st.write(df)
+
             for i in range(len(df)):
                 #print(all['game'].iloc[i], all['date'].iloc[i])
                 #print(elo_table)
@@ -312,24 +322,6 @@ Kalibracja parametrów odbywała się poprzez dopisanie do bazy danych graczy te
                 st.write(max_elo[max_elo['max_elo']>1000])
             
             elo2024 = st.button('Wyświetl ELO liczone dla 2024 roku')
-
-            if elo2024:
-                tmp = df.copy()
-                tmp['date'] = pd.to_datetime(tmp['date'], format='%d.%m.%Y')
-                tmp['year'] = tmp['date'].dt.to_period('Y')
-
-                tmp = tmp[tmp['year'] == '2024']
-                elo_history_24 = dict()
-                for p in tmp.columns[3:]:
-                    elo_table[p] = np.nan
-                for i in range(len(tmp)):
-                    elo_table = elo(tmp.iloc[i], elo_table)
-                    elo_history_24.append(copy.deepcopy(elo_table))  # Znowu używamy deepcopy
-                    elo_df_24 = pd.DataFrame(data=elo_history_24)
-                
-
-                elo24 = pd.DataFrame(elo_df.iloc[-1].transpose()).rename(columns = {len(elo_df)-1:'max elo'}).sort_values(by='max elo', ascending=False)
-                st.write(elo24)
 
             players = st.multiselect('Zaznacz, jakich graczy ELO chcesz śledzić na wykresie', elo_df.columns)
             fig, ax = plt.subplots()
