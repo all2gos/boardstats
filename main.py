@@ -294,7 +294,7 @@ Kalibracja parametrów odbywała się poprzez dopisanie do bazy danych graczy te
             elo_history = [copy.deepcopy(elo_table)]  # Używamy deepcopy do stworzenia głębokiej kopii
 
 
-            league = st.radio('Wybierz, jeżeli chcesz zobaczyć ELO dla konkretnego roku',('Open',2023,2024,2025))
+            league = st.radio('Wybierz, jeżeli chcesz zobaczyć ELO dla konkretnego roku',('Open','2023','2024','2025'))
 
             if league != 'Open':
                 df['date'] = pd.to_datetime(df['date'], format='%d.%m.%Y')
