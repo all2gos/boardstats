@@ -300,6 +300,7 @@ Kalibracja parametrów odbywała się poprzez dopisanie do bazy danych graczy te
                 df['date'] = pd.to_datetime(df['date'], format='%d.%m.%Y')
                 df['year'] = df['date'].dt.to_period('Y')
                 df = df[df['year'] == league]
+                df = df.drop(['year'], axis=1)
 
             st.write(df)
 
