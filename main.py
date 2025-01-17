@@ -320,9 +320,11 @@ Kalibracja parametrów odbywała się poprzez dopisanie do bazy danych graczy te
 
                 tmp = tmp[tmp['year'] == '2024']
                 elo_history_24 = dict()
+                for p in tmp.columns[3:]:
+                    elo_table[p] = np.nan
                 for i in range(len(tmp)):
-                    elo_table_24 = elo(tmp.iloc[i], elo_table_24)
-                    elo_history_24.append(copy.deepcopy(elo_table_24))  # Znowu używamy deepcopy
+                    elo_table = elo(tmp.iloc[i], elo_table)
+                    elo_history_24.append(copy.deepcopy(elo_table))  # Znowu używamy deepcopy
                     elo_df_24 = pd.DataFrame(data=elo_history_24)
                 
 
