@@ -315,7 +315,7 @@ Kalibracja parametrów odbywała się poprzez dopisanie do bazy danych graczy te
 
             if elo_stat_button == 'Aktualne ELO':
                 actual_elo = pd.DataFrame(elo_df.iloc[-1].transpose()).rename(columns = {len(elo_df)-1:'max elo'}).sort_values(by='max elo', ascending=False)
-                st.write(actual_elo)
+                st.write(actual_elo.dropna())
 
                 
             if elo_stat_button == 'Maksymalne ELO w historii':
