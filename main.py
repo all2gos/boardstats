@@ -320,15 +320,15 @@ Kalibracja parametrów odbywała się poprzez dopisanie do bazy danych graczy te
 
                 tmp = tmp[tmp['year'] == '2024']
                 elo_history_24 = dict()
-                for i in range(len(df)):
-                    elo_table_24 = elo(df.iloc[i], elo_table_24)
+                for i in range(len(tmp)):
+                    elo_table_24 = elo(tmp.iloc[i], elo_table_24)
                     elo_history_24.append(copy.deepcopy(elo_table_24))  # Znowu używamy deepcopy
                     elo_df_24 = pd.DataFrame(data=elo_history_24)
                 
 
                 elo24 = pd.DataFrame(elo_df.iloc[-1].transpose()).rename(columns = {len(elo_df)-1:'max elo'}).sort_values(by='max elo', ascending=False)
                 st.write(elo24)
-                
+
             players = st.multiselect('Zaznacz, jakich graczy ELO chcesz śledzić na wykresie', elo_df.columns)
             fig, ax = plt.subplots()
             ax = elo_df[players].plot(ax=ax, legend=False)
