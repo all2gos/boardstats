@@ -252,7 +252,7 @@ Kalibracja parametrów odbywała się poprzez dopisanie do bazy danych graczy te
             for i in range(len(df)):
                 #print(all['game'].iloc[i], all['date'].iloc[i])
                 #print(elo_table)
-                elo_table = elo(df.iloc[i], elo_table)
+                elo_table = elo(df.iloc[i], elo_table, df)
                 elo_history.append(copy.deepcopy(elo_table))  # Znowu używamy deepcopy
                 elo_df = pd.DataFrame(data=elo_history)
 
