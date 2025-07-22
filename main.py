@@ -203,16 +203,16 @@ if main_menu == 'Statystyki':
             st.write('Historia zmian ELO')
             st.write(elo_df)
 
-    if stats_menu == 'Klasyfikacja medalowa':
-        st.write('Kiedyś tu będzie klasyfikacja medalowa, ale na razie jej nie ma')
+if main_menu == 'Klasyfikacja medalowa':
+    st.write('Kiedyś tu będzie klasyfikacja medalowa, ale na razie jej nie ma')
 
-    if stats_menu == 'Program do proponowania gier':
-        st.write('To jest program, który proponuje gry na podstawie opcji, które zaznaczysz')
-        st.write('Z oczywistych względów nie wprowadzam tutaj opcji wyboru nowych graczy i nowych gier, bo zakładam, że w takich sytuacjach będziecie wiedzieć w co chcecie grać')
+if main_menu == 'Program do proponowania gier':
+    st.write('To jest program, który proponuje gry na podstawie opcji, które zaznaczysz')
+    st.write('Z oczywistych względów nie wprowadzam tutaj opcji wyboru nowych graczy i nowych gier, bo zakładam, że w takich sytuacjach będziecie wiedzieć w co chcecie grać')
 
 
-        st.write('Wybierz graczy, których chcesz włączyć do propozycji gier')
-        players = st.multiselect('Wybierz graczy', df.columns[3:].unique())
+    st.write('Wybierz graczy, których chcesz włączyć do propozycji gier')
+    players = st.multiselect('Wybierz graczy', df.columns[3:].unique())
 
-        st.write('Wybierz gry, które chcesz włączyć do propozycji gier')
-        games = st.multiselect('Wybierz gry', df['game'].unique())
+    st.write('Wybierz gry, które chcesz włączyć do propozycji gier')
+    games = st.multiselect('Wybierz gry', df['game'].unique())
