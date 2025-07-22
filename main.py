@@ -4,6 +4,7 @@ import streamlit as st
 import copy
 import matplotlib.pyplot as plt
 import datetime as dt
+from elo import elo
 st.set_page_config(page_title='Boardstats', page_icon=':game_die:')
 
 #do pobierania
@@ -19,60 +20,6 @@ def load_data(sheets_url):
     return pd.read_csv(csv_url, on_bad_lines='skip', index_col=0)
 df = load_data(st.secrets["public_gsheets_url"])
 
-def elo(row, elo_table):
-
-  #czynniki do dowolnej modyfikacji:
-  alfa = 400
-  k = 64
-  l = dict(row.dropna())
-
-  players = list(l)[3:]
-  elo_change_list = {}
-  max_positive_change = 0
-  max_negative_change = 0
-  for p in players:
-    #liczenie aktualnego wyniku
-    actual_score = 0
-    expected_score = 0
-    for oponent in players:
-
-      if oponent != p:
-        if np.isnan(elo_table[oponent]):
-          elo_table[oponent] = 1000
-
-          print(oponent, 'zyskał ranking 1000')
-        elif np.isnan(elo_table[p]):
-          elo_table[p] = 1000
-          print(p, 'zyskał ranking 1000')
-
-        if l[p] > l[oponent]:
-          actual_score+=1
-        elif l[p] == l[oponent]:
-          actual_score +=0.5
-        #liczenie oczekiwanego wyniku
-        expected_score += 1/(1+10**((elo_table[oponent]-elo_table[p])/alfa))
-
-        #oczekiwana zmiana elo
-
-      elo_change_list[p] = k*(actual_score-expected_score)
-
-      #print(f"Aktualny wynik {p} to {actual_score}, podczas gdy oczekiwany wynik to {round(expected_score,2)}, zmiana elo wynosi {round(elo_change_list[p],2)}")
-  #aktualizacja elo: w nowej pętli, żeby wszystko odbywało się po wyliczeniu oczekiwanych wyników
-  for p in players:
-
-    #zliczanie, ktora to jest gra danego gracza overall
-    game_played = len(df[p][df['date'] <= l['date']].dropna())
-    #print(f"gracz {p} do dnia {l['date']} rozegrał {game_played} gier")
-
-    #zliczanie, ktora to jest rozgrywka TEJ KONKRETNEJ gry TEGO KONKRETNEGO GRACZA
-    that_game_played = len(df[p][(df['date'] <= l['date']) & (df['game'] == l['game'])].dropna())
-    #czynnik amortyzujacy dla swiezych graczy:
-
-    change_reduction = 0.2 if that_game_played == 1 else (0.5 if that_game_played == 2 else (0.8 if that_game_played == 3 else 1))
-    #print(f"gracz {p} do dnia {l['date']} rozegrał {that_game_played} rozgrywek gry {l['game']}, ale w sumie rozgeral {game_played} gier, w zwiazku z czym redukcja zmiany wynosi {change_reduction}")
-    #elo_table[p] += round(elo_change_list[p],2)
-    elo_table[p] += round(max(np.log(1/game_played)+4,1)*elo_change_list[p]*change_reduction/(l['liczba_graczy']-1),1)
-  return elo_table
 
 """### Boardstats"""
 
@@ -156,8 +103,6 @@ if main_menu == 'Statystyki':
                 st.write('Przekracza 100 jeżeli gracz gra lepiej niż średnio')
                 st.write('I wynosi poniżej 100, jeżeli gra gorzej niż średnio')
                 st.write('Aktualnie (26.06.23) tylko dwie osoby w ogólnej klasyfikacji mają wskaźnik powyżej 100, czy to jest możliwe?')
-                st.write('Weźmy np brassa: pkt skuteczności i ilość zagranych klej kolejno dla janka,mnie,mileny,gosii,kasi, zosi, matiego i taty janka to:')
-                st.write('129:11,100:6,88:4,85:4,78:11,64:10,60:4,58:7')
     
     if stats_menu == 'WSJG':
         st.write('WSJG czyli współczynnik skuteczności jako gracz to pierwszy wskaźnik, który implementowaliśmy na potrzeby boardstatsa. Posiada jednak pewne ograniczenia, ze względu na które, postanowiliśmy zaimplementować system ELO. Obecnie traktujemy WSJG jako relikt przeszłości, ale po co go wyrzucać jak nikomu nie przeszkadza cnie')
@@ -322,7 +267,6 @@ Kalibracja parametrów odbywała się poprzez dopisanie do bazy danych graczy te
                 max_elo = pd.DataFrame(elo_df.max()).rename(columns={0:'max_elo'}).sort_values(by='max_elo',ascending=False)
                 st.write(max_elo[max_elo['max_elo']>1000])
             
-            elo2024 = st.button('Wyświetl ELO liczone dla 2024 roku')
 
             players = st.multiselect('Zaznacz, jakich graczy ELO chcesz śledzić na wykresie', elo_df.columns)
             fig, ax = plt.subplots()
