@@ -1,4 +1,6 @@
-def elo(row, elo_table):
+import numpy as np
+import pandas as pd
+def elo(row, elo_table, df):
 
   #czynniki do dowolnej modyfikacji:
   alfa = 400
