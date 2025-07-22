@@ -1,0 +1,81 @@
+"""
+### Podstawowe zasady:
+1. ELO startowe to 1000 pkt.
+2. Każda rozgrywka na potrzeby ELO jest liczona jako pojedyncze pojedynki 1 vs 1 we wszystkich kombinacjach. Na przykład, gdy grają trzej gracze (A, B, C), skrypt sprawdza wyniki indywidualnych meczy A-B, B-C i A-C i traktuje je jako odbyte jednocześnie.
+3. Ranking ELO nie uwzględnia tego, jak silna jest wygrana (podobnie jak w szachach, gdzie "siła" wygranej jest subiektywna, a tutaj mamy ją wyrażoną w punktach zwycięstwa).
+
+### Wzory liczenia ELO:
+
+Przykład:
+
+Gracz A ma ranking 1613 i:
+- przegrał z graczem 1603
+- zremisował z graczem 1477
+- wygrał z graczem 1388
+- wygrał z graczem 1586
+- przegrał z graczem 1720
+
+Aktualny wynik tego gracza to (0+0,5+1+1+0) = 2.5
+
+Podczas, gdy jego oczekiwany wynik powinien wynosić:
+
+$$
+E_A = \\frac{1}{1 + 10^{(R_B - R_A) / \\alpha}}
+$$
+
+gdzie:
+- \( R_B, R_A \) to kolejno aktualne rankingi przeciwnika i gracza A
+- wartość \( \\alpha \) jest wartością swobodną, którą można kalibrować, ale przyjmujemy sugerowaną wartość 400.
+
+Przykładowo dla pojedynku A-B oczekiwany wynik to:
+
+$$
+E_A = \\frac{1}{1 + 10^{(1603 - 1613) / 400}} = 0.51
+$$
+
+Kolejne oczekiwane wyniki pojedynków to: 0.69, 0.79, 0.54, 0.35, co w całości sumuje się do 2.88.
+
+Ranking gracza A zostaje zaktualizowany przy pomocy następującego wzoru:
+
+$$
+N_A = R_A + k (A_A - E_A) = 1613 + 64 (2.5 - 2.88) = 1601
+$$
+
+Wartość \( k \) została ustalona na 64.
+
+### Zwiększanie zmiany ELO dla pierwszych rozgrywek
+
+Celem tego mechanizmu jest szybkie umiejscowienie wszystkich graczy w dobrych przedziałach ELO. Stosujemy mnożnik w postaci:
+
+$$
+f(x) = \\max[\\log(\\frac{1}{x}) + 4, 1]
+$$
+
+Funkcja ta przyjmuje następujące wartości:
+
+| x  | f(x) | x  | f(x) |
+|----|------|----|------|
+| 1  | 4.00 | 13 | 1.44 |
+| 2  | 3.30 | 14 | 1.36 |
+| 3  | 2.90 | 15 | 1.29 |
+| 4  | 2.61 | 16 | 1.23 |
+| 5  | 2.39 | 17 | 1.17 |
+| 6  | 2.21 | 18 | 1.11 |
+| 7  | 2.05 | 19 | 1.06 |
+| 8  | 1.92 | 20 | 1.004|
+| 9  | 1.80 | 21 | 1.00 |
+| 10 | 1.70 | 22 | 1.00 |
+| 11 | 1.60 | 23 | 1.00 |
+| 12 | 1.52 | 24 | 1.00 |
+
+Skrypt sprawdza, która to jest rozgrywka danego gracza wpisana do bazy i mnoży jego wyliczoną zmianę ELO przez odpowiadający czynnik.
+
+### Amortyzacja zmiany ELO dla gier nowo rozgrywanych
+
+W przypadku, gdy dany gracz rozgrywa swoją pierwszą wpisaną do bazy rozgrywkę danej planszówki, jego zmiana ELO zostaje pomniejszona o 80%. Dla drugiej i trzeciej rozgrywki tej samej gry redukcje tych zmian wynoszą kolejno: 50% oraz 20%. Mechanizm ten działa jako swoisty wentyl bezpieczeństwa dla graczy ze zbudowanym ELO, aby nieoczekiwane wygrane czy przegrane w nowej grze nie wpływały znacząco na ich ranking.
+
+### Kalibracja parametrów
+
+Kalibracja parametrów odbywała się poprzez dopisanie do bazy danych graczy teoretycznych: jeden z nich zawsze wygrywał, drugi zawsze przegrywał. Ich ELO po 86 grach wynosiło około 1500 i 500. Początkowo zamierzano stworzyć zakres 200-2000, ale okazało się, że rankingi tych graczy stają się tak skrajne, że nie zmieniają się znacząco przy pojedynkach z graczami o rankingu około 1000.
+
+~Za konceptualizację odpowiada all2 i Jaho-Wojownik xD"""
