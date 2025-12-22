@@ -162,11 +162,10 @@ if main_menu == 'Statystyki':
 
             league = st.radio('Wybierz, jeżeli chcesz zobaczyć ELO dla konkretnego roku',('Open','2023','2024','2025'))
 
+            df['date'] = pd.to_datetime(df['date'], format='%d.%m.%Y')
 
             all_df = df.copy()
             if league != 'Open':
-                df['date'] = pd.to_datetime(df['date'], format='%d.%m.%Y')
-                df['year'] = df['date'].dt.to_period('Y')
                 df = df[df['year'] == league]
                 df = df.drop(['year'], axis=1)
 
