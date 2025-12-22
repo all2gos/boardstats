@@ -22,7 +22,7 @@ def elo(row, elo_table, all_df):
           elo_table[oponent] = 1000
 
           print(oponent, 'zyskał ranking 1000')
-        elif np.isnan(elo_table[p]):
+        if np.isnan(elo_table[p]):
           elo_table[p] = 1000
           print(p, 'zyskał ranking 1000')
 
