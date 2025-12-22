@@ -162,6 +162,8 @@ if main_menu == 'Statystyki':
 
             league = st.radio('Wybierz, jeżeli chcesz zobaczyć ELO dla konkretnego roku',('Open','2023','2024','2025'))
 
+
+            all_df = df.copy()
             if league != 'Open':
                 df['date'] = pd.to_datetime(df['date'], format='%d.%m.%Y')
                 df['year'] = df['date'].dt.to_period('Y')
@@ -171,9 +173,7 @@ if main_menu == 'Statystyki':
             st.write(df)
 
             for i in range(len(df)):
-                #print(all['game'].iloc[i], all['date'].iloc[i])
-                #print(elo_table)
-                elo_table = elo(df.iloc[i], elo_table, df)
+                elo_table = elo(df.iloc[i], elo_table, all_df)
                 elo_history.append(copy.deepcopy(elo_table))  # Znowu używamy deepcopy
                 elo_df = pd.DataFrame(data=elo_history)
 
