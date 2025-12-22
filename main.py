@@ -166,6 +166,7 @@ if main_menu == 'Statystyki':
 
             all_df = df.copy()
             if league != 'Open':
+                df['year'] = df['date'].dt.to_period('Y')
                 df = df[df['year'] == league]
                 df = df.drop(['year'], axis=1)
 
