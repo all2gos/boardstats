@@ -31,7 +31,7 @@ if main_menu == 'Wyświetl całą tabelę':
     st.write(df.dropna(axis='columns', how='all'))
 
 if main_menu == 'Statystyki':
-    stats_menu = st.radio('Jakie statystyki chcesz wyświetlić?',('Ogólne','Staty dla danego gracza','ELO','WSJG', 'Klasyfikacja medalowa'))
+    stats_menu = st.radio('Jakie statystyki chcesz wyświetlić?',('Ogólne','Staty dla danego gracza','ELO','WSJG', 'Hall of Fame'))
     if stats_menu == 'Ogólne':
         rows = st.columns(2)
         rows[0].markdown("#### Najczęściej grane gry")
@@ -203,8 +203,19 @@ if main_menu == 'Statystyki':
             st.write('Historia zmian ELO')
             st.write(elo_df)
 
-if main_menu == 'Klasyfikacja medalowa':
-    st.write('Kiedyś tu będzie klasyfikacja medalowa, ale na razie jej nie ma')
+if main_menu == 'Hall of Fame':
+
+    st.write('Każda kategoria to podsumowanie wszystkich sezonów (poza tym aktualnie trwającym)')
+
+    st.write('### Najwięcej rozegranych gier')
+
+    years = [2023, 2024]
+
+    df['date'] = pd.to_datetime(df['date'], format='%d.%m.%Y')
+    
+    for year in years:
+        year_df = df[df['date'].dt.year == year]
+        print(year_df.value_counts()[:3])
 
 if main_menu == 'Program do proponowania gier':
     st.write('To jest program, który proponuje gry na podstawie opcji, które zaznaczysz')
