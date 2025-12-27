@@ -203,19 +203,19 @@ if main_menu == 'Statystyki':
             st.write('Historia zmian ELO')
             st.write(elo_df)
 
-if main_menu == 'Hall of Fame':
+    if main_menu == 'Hall of Fame':
 
-    st.write('Każda kategoria to podsumowanie wszystkich sezonów (poza tym aktualnie trwającym)')
+        st.write('Każda kategoria to podsumowanie wszystkich sezonów (poza tym aktualnie trwającym)')
 
-    st.write('### Najwięcej rozegranych gier')
+        st.write('### Najwięcej rozegranych gier')
 
-    years = [2023, 2024]
+        years = [2023, 2024]
 
-    df['date'] = pd.to_datetime(df['date'], format='%d.%m.%Y')
-    
-    for year in years:
-        year_df = df[df['date'].dt.year == year]
-        print(year_df.value_counts()[:3])
+        df['date'] = pd.to_datetime(df['date'], format='%d.%m.%Y')
+        
+        for year in years:
+            year_df = df[df['date'].dt.year == year]
+            print(year_df.value_counts()[:3])
 
 if main_menu == 'Program do proponowania gier':
     st.write('To jest program, który proponuje gry na podstawie opcji, które zaznaczysz')
