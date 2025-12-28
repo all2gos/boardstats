@@ -18,8 +18,9 @@ def convert_df(df):
 def load_data(sheets_url):
     csv_url = sheets_url.replace("/edit#gid=", "/export?format=csv&gid=")
     return pd.read_csv(csv_url, on_bad_lines='skip', index_col=0)
-df = load_data(st.secrets["public_gsheets_url"])
 
+
+df = load_data(st.secrets["public_gsheets_url"])
 
 """### Boardstats"""
 
@@ -31,8 +32,20 @@ if main_menu == 'Wyświetl całą tabelę':
     st.write(df.dropna(axis='columns', how='all'))
 
 if main_menu == 'Statystyki':
-    stats_menu = st.radio('Jakie statystyki chcesz wyświetlić?',('Ogólne','Staty dla danego gracza','ELO','WSJG', 'Hall of Fame'))
+    stats_menu = st.radio('Jakie statystyki chcesz wyświetlić?',('Ogólne','Staty dla danego gracza','ELO', 'Hall of Fame', 'WSJG'))
     if stats_menu == 'Ogólne':
+
+        df['date'] = pd.to_datetime(df['date'], format='%d.%m.%Y')
+
+        all_df = df.copy()
+
+        league = st.radio('Wybierz, jeżeli chcesz zobaczyć ogólne informacje dla konkretnego roku',('Open','2023','2024','2025'))
+
+        if league != 'Open':
+            df['year'] = df['date'].dt.to_period('Y')
+            df = df[df['year'] == league]
+            df = df.drop(['year'], axis=1)
+
         rows = st.columns(2)
         rows[0].markdown("#### Najczęściej grane gry")
         rows[0].dataframe(df['game'].value_counts())
@@ -44,11 +57,28 @@ if main_menu == 'Statystyki':
         
         if player in df.columns:               
             player_df = df[df[player].notna()]            
-            filtr = st.checkbox('Zaznacz jeśli chcesz zobaczyć statystyki dla wybranej gry (działa, bo działa jeszcze bym z tego nie korzystał)')
+            filtr = st.checkbox('Zaznacz jeśli chcesz zobaczyć statystyki dla wybranej gry (działa!!!)')
             if filtr:
                 games = st.multiselect('Wybierz grę, która Cię interesuje',player_df['game'].unique()) 
-                if games in player_df['game'].unique():       
-                    player_df = player_df[player_df['game'] ==  games[0]]
+
+                try:
+                    player_df = player_df[player_df['game'].isin(games)]
+                except ValueError:
+                    st.write('Czekam aż wybierzesz grę')
+
+            
+            year_filter = st.checkbox('Zaznacz jeśli chcesz zobaczyć spis gier (gry) dla danego sezonu')
+
+            if year_filter:
+                years = st.multiselect('Wybierz rok', [2023, 2024, 2025])
+
+                try:
+                    player_df['date'] = pd.to_datetime(player_df['date'], format='%d.%m.%Y')
+
+                    player_df['year'] = player_df['date'].dt.year
+                    player_df = player_df[player_df['year'].isin(years)].drop('year',axis=1)
+                except ValueError:
+                    st.write('Czekam, aż wybierzesz rok')
             """
             --------------------------------------------------
             """
@@ -72,8 +102,8 @@ if main_menu == 'Statystyki':
                     position_dict[place] += 1
                 else:
                     position_dict[place] = 1    
-            position_df = (pd.DataFrame(data = position_dict.items(),columns=['miejsce','tyle_razy_gracz_zajal_to_miejsce']))
-            st.write(position_df)
+            position_df = (pd.DataFrame(data = position_dict.items(),columns=['miejsce','tyle_razy_gracz_zajal_to_miejsce'])).sort_values(by='miejsce')
+            st.write(position_df.set_index('miejsce'))
 
             
             avg_place = player_df['liczba_graczy'].mean()/2
@@ -159,7 +189,6 @@ if main_menu == 'Statystyki':
 
             elo_history = [copy.deepcopy(elo_table)]  # Używamy deepcopy do stworzenia głębokiej kopii
 
-
             league = st.radio('Wybierz, jeżeli chcesz zobaczyć ELO dla konkretnego roku',('Open','2023','2024','2025'))
 
             df['date'] = pd.to_datetime(df['date'], format='%d.%m.%Y')
@@ -183,12 +212,10 @@ if main_menu == 'Statystyki':
                 actual_elo = pd.DataFrame(elo_df.iloc[-1].transpose()).rename(columns = {len(elo_df)-1:'max elo'}).sort_values(by='max elo', ascending=False)
                 st.write(actual_elo.dropna())
 
-                
             if elo_stat_button == 'Maksymalne ELO w historii':
                 max_elo = pd.DataFrame(elo_df.max()).rename(columns={0:'max_elo'}).sort_values(by='max_elo',ascending=False)
                 st.write(max_elo[max_elo['max_elo']>1000])
             
-
             players = st.multiselect('Zaznacz, jakich graczy ELO chcesz śledzić na wykresie', elo_df.columns)
 
             if players != []: 
@@ -203,19 +230,107 @@ if main_menu == 'Statystyki':
             st.write('Historia zmian ELO')
             st.write(elo_df)
 
-    if main_menu == 'Hall of Fame':
+    if stats_menu == 'Hall of Fame':
 
         st.write('Każda kategoria to podsumowanie wszystkich sezonów (poza tym aktualnie trwającym)')
 
-        st.write('### Najwięcej rozegranych gier')
+        st.write('### Liczba gier w sezonie')
 
-        years = [2023, 2024]
+        years = [2023, 2024, 2025]
 
         df['date'] = pd.to_datetime(df['date'], format='%d.%m.%Y')
         
+        medals = {'gold': [], 'silver': [], 'bronze': []}
         for year in years:
             year_df = df[df['date'].dt.year == year]
-            print(year_df.value_counts()[:3])
+            st.write(f"W {year} roku rozegrano łącznie {len(year_df)} gier")
+
+            player_cnt = dict()
+            for player in df.columns[3:]:
+                count = len(year_df[player].dropna())
+                player_cnt[player] = count
+
+            player_cnt_df = pd.DataFrame(data=player_cnt.items(), columns=['gracz', 'liczba_gier']).sort_values(by='liczba_gier', ascending=False)
+
+            first_place = player_cnt_df.iloc[0]
+            second_place = player_cnt_df.iloc[1]
+            third_place = player_cnt_df.iloc[2]
+
+            medals['gold'].append(first_place['gracz'])
+            medals['silver'].append(second_place['gracz'])
+            medals['bronze'].append(third_place['gracz'])   
+
+        st.write('----------------------------------------------------------')
+        st.write('Gracze z najwiekszą liczbą rozegranych gier w sezonie')
+        st.write(pd.DataFrame(medals, index=years))
+
+        st.write('### Najlepsze ELO w sezonie')
+
+        medals = {'gold': [], 'silver': [], 'bronze': []}
+        elo_table = dict()
+        for p in df.columns[3:]:
+            elo_table[p] = np.nan
+
+
+        for year in years:
+            elo_history = [copy.deepcopy(elo_table)]  # Używamy deepcopy do stworzenia głębokiej kopii
+
+            df['date'] = pd.to_datetime(df['date'], format='%d.%m.%Y')
+
+            all_df = df.copy()
+            df['year'] = df['date'].dt.to_period('Y')
+            year_df = df[df['year'] == str(year)].drop(columns='year')
+
+            for i in range(len(year_df)):
+                elo_table = elo(year_df.iloc[i], elo_table, all_df)
+                elo_history.append(copy.deepcopy(elo_table))  # Znowu używamy deepcopy
+                elo_df = pd.DataFrame(data=elo_history)
+
+
+            actual_elo = pd.DataFrame(elo_df.iloc[-1].transpose()).rename(columns = {len(elo_df)-1:'max elo'}).sort_values(by='max elo', ascending=False)
+            #st.write(actual_elo.dropna()[:3])
+
+            actual_elo = actual_elo.reset_index(names='gracz')
+            first_place = actual_elo.iloc[0]
+            second_place = actual_elo.iloc[1]
+            third_place = actual_elo.iloc[2]
+
+            medals['gold'].append(first_place['gracz'])
+            medals['silver'].append(second_place['gracz'])
+            medals['bronze'].append(third_place['gracz'])  
+
+        st.write(pd.DataFrame(medals, index=years))
+        st.write('### Największa liczba RÓŻNYCH gier w sezonie')
+
+        for year in years:
+            medals = {'gold': [], 'silver': [], 'bronze': []}
+
+            df['date'] = pd.to_datetime(df['date'], format='%d.%m.%Y')
+
+            all_df = df.copy()
+            df['year'] = df['date'].dt.to_period('Y')
+            year_df = df[df['year'] == str(year)]
+
+            different_games_cnt = dict()
+
+            for player in df.columns[3:-1]:
+                different_games_cnt[player] = len(year_df[['game',player]].dropna()['game'].value_counts())
+
+            different_games_cnt = pd.DataFrame(data=different_games_cnt.items(), columns=['gracz', 'liczba_różnych_gier']).sort_values(by='liczba_różnych_gier', ascending=False)
+
+            first_place = different_games_cnt.iloc[0]
+            second_place = different_games_cnt.iloc[1]
+            third_place = different_games_cnt.iloc[2]
+
+            medals['gold'].append(first_place['gracz'])
+            medals['silver'].append(second_place['gracz'])
+            medals['bronze'].append(third_place['gracz'])  
+
+        st.write(pd.DataFrame(medals, index=years))
+
+        st.write('### Unikalna gra kolekcja medalowa?')
+        st.write('To póki co tylko koncept, ażeby liczyć najlepszy performance w każdym typie gry i brać taką najlepszą dla danego gracza rozgrywkę i w ten sposób przeprowadzać klasyfikację medalową')
+
 
 if main_menu == 'Program do proponowania gier':
     st.write('To jest program, który proponuje gry na podstawie opcji, które zaznaczysz')
