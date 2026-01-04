@@ -20,7 +20,8 @@ def load_data(sheets_url):
     return pd.read_csv(csv_url, on_bad_lines='skip', index_col=0)
 
 
-df = load_data(st.secrets["public_gsheets_url"])
+#df = load_data(st.secrets["public_gsheets_url"])
+df = load_data('https://docs.google.com/spreadsheets/d/1AbYEJT47wMhofqjcFlakU6KA-tsOlajh/edit#gid=1838830373')
 
 """### Boardstats"""
 
@@ -70,7 +71,7 @@ if main_menu == 'Statystyki':
             year_filter = st.checkbox('Zaznacz jeśli chcesz zobaczyć spis gier (gry) dla danego sezonu')
 
             if year_filter:
-                years = st.multiselect('Wybierz rok', [2023, 2024, 2025])
+                years = st.multiselect('Wybierz rok', [2023, 2024, 2025, 2026])
 
                 try:
                     player_df['date'] = pd.to_datetime(player_df['date'], format='%d.%m.%Y')
@@ -236,7 +237,7 @@ if main_menu == 'Statystyki':
 
         st.write('### Liczba gier w sezonie')
 
-        years = [2023, 2024, 2025]
+        years = [2023, 2024, 2025, 2026]
 
         df['date'] = pd.to_datetime(df['date'], format='%d.%m.%Y')
         
