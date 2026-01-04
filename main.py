@@ -40,7 +40,7 @@ if main_menu == 'Statystyki':
 
         all_df = df.copy()
 
-        league = st.radio('Wybierz, jeżeli chcesz zobaczyć ogólne informacje dla konkretnego roku',('Open','2023','2024','2025'))
+        league = st.radio('Wybierz, jeżeli chcesz zobaczyć ogólne informacje dla konkretnego roku',('Open','2023','2024','2025','2026'))
 
         if league != 'Open':
             df['year'] = df['date'].dt.to_period('Y')
