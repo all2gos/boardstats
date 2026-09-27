@@ -1,4 +1,5 @@
-streamlit==1.52.2
+streamlit==1.64.0
 pandas==3.0.3
 numpy==2.3.5
 altair==6.0.0
+pyarrow==22.0.0  # 25.0.1 ma znany segfault (apache/arrow#50471); 22.0.0 przetestowane lokalnie
