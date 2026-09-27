@@ -1,2 +1,4 @@
-gsheetsdb == 0.1.13.1
-matplotlib
+streamlit==1.52.2
+pandas==3.0.3
+numpy==2.3.5
+altair==6.0.0
