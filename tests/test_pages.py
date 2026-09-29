@@ -7,8 +7,8 @@ from streamlit.testing.v1 import AppTest
 
 REPO = Path(__file__).resolve().parent.parent
 SNAPSHOT = REPO / 'tests' / 'baseline' / 'sheet_snapshot.csv'
-PAGES = ['main.py', 'pages/tabela.py', 'pages/ogolne.py', 'pages/gracz.py', 'pages/gra.py', 'pages/siec.py', 'pages/ranking_elo.py',
-         'pages/hall_of_fame.py', 'pages/wsjg.py', 'pages/program.py']
+PAGES = ['main.py', 'views/tabela.py', 'views/ogolne.py', 'views/gracz.py', 'views/gra.py', 'views/siec.py', 'views/ranking_elo.py',
+         'views/hall_of_fame.py', 'views/wsjg.py', 'views/program.py']
 
 _read_csv = pd.read_csv
 
@@ -43,7 +43,7 @@ def test_page_renders(page):
 
 
 def open_player(name):
-    at = run('pages/gracz.py')
+    at = run('views/gracz.py')
     widget(at, 'Wybierz gracza').set_value(name).run()
     return at
 
@@ -82,14 +82,14 @@ def test_player_page_filters_without_matches_show_message():
 
 
 def test_table_newest_first():
-    table = run('pages/tabela.py').dataframe[0].value
+    table = run('views/tabela.py').dataframe[0].value
     sheet = pd.read_csv(SNAPSHOT, index_col=0)
     assert table['game'].iloc[0] == sheet['game'].iloc[-1]
     assert list(table.index) == list(sheet.index[::-1])
 
 
 def test_player_select_placeholder_and_recency_order():
-    at = run('pages/gracz.py')
+    at = run('views/gracz.py')
     select = widget(at, 'Wybierz gracza')
     assert select.value is None and not at.checkbox and not at.dataframe
     # ostatnia partia snapshotu: kaskadia 26.09.2026 (Bezia, Hanza, Kasia i Tomek Wierczek) -> alfabetycznie
@@ -100,7 +100,7 @@ def test_player_select_placeholder_and_recency_order():
 
 
 def test_elo_page_tables():
-    at = run('pages/ranking_elo.py')
+    at = run('views/ranking_elo.py')
     current = at.dataframe[0].value
     assert list(current.columns) == ['elo']
     expected = pd.read_csv(REPO / 'tests' / 'baseline' / 'elo_current_open.csv', index_col=0,
@@ -114,13 +114,13 @@ def test_elo_page_tables():
 
 
 def test_elo_history_in_expander():
-    at = run('pages/ranking_elo.py')
+    at = run('views/ranking_elo.py')
     expander = next(e for e in at.expander if e.label == 'Historia zmian ELO')
     assert len(expander.dataframe) == 1 and len(expander.dataframe[0].value) == 297
 
 
 def test_elo_chart_defaults_to_top5():
-    at = run('pages/ranking_elo.py')
+    at = run('views/ranking_elo.py')
     select = widget(at, 'Zaznacz, jakich graczy ELO chcesz śledzić na wykresie')
     expected = pd.read_csv(REPO / 'tests' / 'baseline' / 'elo_current_open.csv')['gracz'].head(5).tolist()
     assert select.value == expected
@@ -129,7 +129,7 @@ def test_elo_chart_defaults_to_top5():
 
 
 def test_game_page_select_sorted_by_count():
-    at = run('pages/gra.py')
+    at = run('views/gra.py')
     options = widget(at, 'Wybierz grę').options
     counts = [int(o.rsplit('(', 1)[1].split()[0]) for o in options]
     assert counts == sorted(counts, reverse=True)
@@ -137,7 +137,7 @@ def test_game_page_select_sorted_by_count():
 
 
 def test_game_page_summary():
-    at = run('pages/gra.py')
+    at = run('views/gra.py')
     widget(at, 'Wybierz grę').set_value('brass').run()
     metrics = {m.label: m.value for m in at.metric}
     sheet = pd.read_csv(SNAPSHOT, index_col=0)
@@ -148,7 +148,7 @@ def test_game_page_summary():
 
 
 def test_game_page_wsjg_matches_baseline():
-    at = run('pages/gra.py')
+    at = run('views/gra.py')
     widget(at, 'Wybierz grę').set_value('kaskadia').run()
     expected = pd.read_csv(REPO / 'tests' / 'baseline' / 'wsjg_by_game.csv')
     expected = expected[expected['gra'] == 'kaskadia'][['gracz', 'pkt_skutecznosci']].reset_index(drop=True)
@@ -187,14 +187,14 @@ def test_player_page_co_players_and_nemesis():
 
 
 def test_hall_of_fame_shared_medals():
-    at = run('pages/hall_of_fame.py')
+    at = run('views/hall_of_fame.py')
     games = at.dataframe[0].value
     # 2023: Gosia i Mati po 56 partii -> wspólne srebro, brak brązu
     assert games.loc[2023].tolist() == ['Raf Stottko (62)', 'Gosia Stottko (56), Mati Stottko (56)', '']
 
 
 def test_hall_of_fame_elo_min_games():
-    at = run('pages/hall_of_fame.py')
+    at = run('views/hall_of_fame.py')
     assert any('co najmniej 5 partiami' in c.value for c in at.caption)
     elo = at.dataframe[1].value
     # Dawid Węgrzyk ma w 2023 dokładnie 5 partii -> mieści się w progu (>= 5)
@@ -202,7 +202,7 @@ def test_hall_of_fame_elo_min_games():
 
 
 def test_hall_of_fame_records_section():
-    at = run('pages/hall_of_fame.py')
+    at = run('views/hall_of_fame.py')
     counts = next(d.value for d in at.dataframe if 'gry z rekordem' in d.value.columns
                   and d.value['gry z rekordem'].dtype.kind == 'i')
     games = pd.read_csv(SNAPSHOT, index_col=0)['game'].nunique()
@@ -231,7 +231,7 @@ def test_player_page_table_size_summary():
     assert sizes['liczba graczy'].is_monotonic_increasing
 
 def test_hall_of_fame_nemesis_section():
-    at = run('pages/hall_of_fame.py')
+    at = run('views/hall_of_fame.py')
     for kind in ('nominalnie', 'względnie'):
         expander = next(e for e in at.expander if e.label == f'Dla kogo ({kind})')
         listing = expander.dataframe[0].value
@@ -242,13 +242,13 @@ def test_hall_of_fame_nemesis_section():
 
 
 def test_wsjg_page_has_explanation():
-    at = run('pages/wsjg.py')
+    at = run('views/wsjg.py')
     expander = next(e for e in at.expander if e.label == 'Jak to jest liczone?')
     assert any('środku stawki' in m.value for m in expander.markdown)
 
 
 def open_game(name):
-    at = run('pages/gra.py')
+    at = run('views/gra.py')
     widget(at, 'Wybierz grę').set_value(name).run()
     return at
 
@@ -303,7 +303,7 @@ def test_game_page_mature_stats_in_expander():
 
 
 def test_hall_of_fame_games_player_counts():
-    at = run('pages/hall_of_fame.py')
+    at = run('views/hall_of_fame.py')
     frame = next(d.value for d in at.dataframe if list(d.value.index) == ['wszech czasów'])
     sheet = pd.read_csv(SNAPSHOT, index_col=0)
     per_game = {g: rows.iloc[:, 3:].notna().any().sum() for g, rows in sheet.groupby('game')}
@@ -313,7 +313,7 @@ def test_hall_of_fame_games_player_counts():
 
 
 def test_hall_of_fame_games_time_span():
-    at = run('pages/hall_of_fame.py')
+    at = run('views/hall_of_fame.py')
     frames = [d.value for d in at.dataframe if list(d.value.index) == ['wszech czasów']]
     assert len(frames) == 2
     sheet = pd.read_csv(SNAPSHOT, index_col=0)
@@ -324,7 +324,7 @@ def test_hall_of_fame_games_time_span():
 
 
 def test_network_page():
-    at = run('pages/siec.py')
+    at = run('views/siec.py')
     assert not at.exception
     players, games = (d.value for d in at.dataframe)
     sheet = pd.read_csv(SNAPSHOT, index_col=0)

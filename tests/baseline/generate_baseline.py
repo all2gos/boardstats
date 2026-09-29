@@ -40,7 +40,7 @@ def _patched_read_csv(path, *args, **kwargs):
 
 def _app(page="main.py"):
     """Uruchamia stronę aplikacji. AppTest (Streamlit 1.52) nie przełącza stron st.navigation,
-    więc strony z pages/ uruchamiamy bezpośrednio."""
+    więc strony z views/ uruchamiamy bezpośrednio."""
     from streamlit.testing.v1 import AppTest
     at = AppTest.from_file(str(REPO / page), default_timeout=600)
     at.run()
@@ -58,7 +58,7 @@ def _check(at):
 
 def dump_elo(out: Path):
     for league in ["Open"] + YEARS:
-        at = _app("pages/ranking_elo.py")
+        at = _app("views/ranking_elo.py")
         _radio(at, "Wybierz, jeżeli chcesz zobaczyć ELO dla konkretnego roku").set_value(league).run()
         _check(at)
         frames = [d.value for d in at.dataframe]
@@ -74,7 +74,7 @@ def dump_elo(out: Path):
 
 
 def dump_wsjg(out: Path):
-    at = _app("pages/wsjg.py")
+    at = _app("views/wsjg.py")
     _check(at)
     # "wszystkie gry" bierzemy z domyślnego widoku: po powrocie do tej opcji z innej gry
     # stary kod (`is not` na stringu, TODO 0.5) pokazuje pustą tabelę.
