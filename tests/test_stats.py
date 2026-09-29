@@ -7,7 +7,7 @@ from stats import (game_counts, in_year, matches, player_game_counts, player_pla
                    season_distinct_games, season_game_counts, win_streaks, wsjg, wsjg_value, game_summary,
                    game_player_table, top_scores, best_scores, game_best_per_player, lowest_winning_score,
                    highest_losing_score, player_best_per_game, co_players, nemesis, nemesis_relative, nemesis_holders, nemesis_counts, is_mature, match_results, score_summary, scores_by_table_size, best_debut, game_player_counts, game_time_spans,
-                   pair_matches, edge_weights, player_connections, game_connections,
+                   pair_matches, edge_weights, player_connections, game_connections, medal_winners,
                    medal_table, medal_frame, distinct_co_players, group_counts,
                    streak_podium, distinct_games_won, record_holders, record_counts, table_sizes)
 from tests.fixtures import sheet
@@ -371,3 +371,8 @@ def test_player_and_game_connections(long):
     games = game_connections(long)
     assert games.values.tolist() == [['brass', 13, 3], ['azul', 9, 3], ['kaskadia', 4, 2]]
     assert players['połączenia'].sum() == 2 * games['połączenia'].sum()  # każde połączenie ma dwa końce
+
+
+def test_medal_winners():
+    assert medal_winners(pd.Series({'B': 5.0, 'A': 5.0, 'C': 3.0, 'D': None})) == {
+        'gold': ['A', 'B'], 'silver': [], 'bronze': ['C']}

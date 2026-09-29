@@ -242,9 +242,18 @@ def medal_table(values):
     Obok gracza wynik zaokrąglony do liczby całkowitej, np. "Ania (47)".
     """
     values = values.dropna()
+    return {medal: ', '.join(f"{name} ({round(values[name])})" for name in names)
+            for medal, names in medal_winners(values).items()}
+
+
+def medal_winners(values):
+    """Kto dostaje który medal: {'gold': [...], 'silver': [...], 'bronze': [...]} (ranking 1-1-3, alfabetycznie).
+
+    values: Series nazwa -> wynik (wyżej = lepiej, NaN = poza klasyfikacją).
+    """
+    values = values.dropna()
     ranks = values.rank(method='min', ascending=False)
-    return {medal: ', '.join(f"{name} ({round(values[name])})" for name in sorted(values.index[ranks == place]))
-            for place, medal in enumerate(MEDALS, start=1)}
+    return {medal: sorted(values.index[ranks == place]) for place, medal in enumerate(MEDALS, start=1)}
 
 
 def medal_frame(values_by_year):

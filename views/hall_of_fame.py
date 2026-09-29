@@ -1,15 +1,12 @@
-import datetime as dt
-
 import streamlit as st
-from data import load_raw, seasons, player_columns, to_long
-from ratings import compute_elo
+from data import load_raw, player_columns, to_long
 from stats import (NEMESIS_MIN_GAMES, NOMINAL, RECORD, RELATIVE, TOP_LOSING, distinct_co_players,
                    distinct_games_won, game_player_counts, game_time_spans, group_counts, in_year, matches,
                    medal_frame, nemesis_counts, nemesis_holders, record_counts, record_holders,
                    season_distinct_games, season_game_counts, streak_podium)
+from titles import MIN_SEASON_GAMES, past_seasons, season_elo
 
 DATE_COLUMNS = {c: st.column_config.DateColumn(c, format='DD.MM.YYYY') for c in ('od', 'do')}
-MIN_SEASON_GAMES = 5  # minimalna liczba partii w sezonie, żeby liczyć się do medalu za sezonowe ELO
 
 df = load_raw()
 long = to_long(df)
@@ -22,18 +19,11 @@ def positive(table, column):
     return values[values > 0]
 
 
-def season_elo(year):
-    """Sezonowe ELO graczy, którzy rozegrali w sezonie co najmniej MIN_SEASON_GAMES partii."""
-    elo = compute_elo(df, year)[1]['elo']
-    games = season_game_counts(long, year, players).set_index('gracz')['liczba_gier']
-    return elo[games.reindex(elo.index) >= MIN_SEASON_GAMES]
-
-
 st.write('Każda kategoria to podsumowanie wszystkich sezonów (poza tym aktualnie trwającym)')
 
 st.write('### Liczba gier w sezonie')
 
-years = [y for y in seasons(df) if y < dt.date.today().year]
+years = past_seasons(df)
 
 for year in years:
     st.write(f"W {year} roku rozegrano łącznie {len(matches(in_year(long, year)))} gier")
@@ -45,7 +35,7 @@ st.write(medal_frame({year: positive(season_game_counts(long, year, players), 'l
 st.write('### Najlepsze ELO w sezonie')
 st.caption(f'Liczą się gracze z co najmniej {MIN_SEASON_GAMES} partiami w sezonie.')
 
-st.write(medal_frame({year: season_elo(year) for year in years}))
+st.write(medal_frame({year: season_elo(df, long, year) for year in years}))
 st.write('### Największa liczba RÓŻNYCH gier w sezonie')
 
 st.write(medal_frame({year: positive(season_distinct_games(long, year, players), 'liczba_różnych_gier')

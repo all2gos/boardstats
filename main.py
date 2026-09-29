@@ -14,6 +14,7 @@ nav = st.navigation({
         st.Page('views/siec.py', title='Sieć graczy', url_path='siec'),
         st.Page('views/ranking_elo.py', title='ELO', url_path='elo'),
         st.Page('views/hall_of_fame.py', title='Hall of Fame', url_path='hall-of-fame'),
+        st.Page('views/tytuly.py', title='Tytuły i odznaczenia', url_path='tytuly'),
         st.Page('views/wsjg.py', title='WSJG', url_path='wsjg'),
     ],
 }, position='top')

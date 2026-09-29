@@ -8,7 +8,7 @@ from streamlit.testing.v1 import AppTest
 REPO = Path(__file__).resolve().parent.parent
 SNAPSHOT = REPO / 'tests' / 'baseline' / 'sheet_snapshot.csv'
 PAGES = ['main.py', 'views/tabela.py', 'views/ogolne.py', 'views/gracz.py', 'views/gra.py', 'views/siec.py', 'views/ranking_elo.py',
-         'views/hall_of_fame.py', 'views/wsjg.py', 'views/program.py']
+         'views/hall_of_fame.py', 'views/tytuly.py', 'views/wsjg.py', 'views/program.py']
 
 _read_csv = pd.read_csv
 
@@ -335,3 +335,18 @@ def test_network_page():
     assert widget_.value == '6 mies.'
     widget_.set_value('bez zaniku').run()
     assert not at.exception
+
+
+def test_titles_page():
+    at = run('views/tytuly.py')
+    assert not at.exception
+    headings = [m.value for m in at.markdown if m.value.startswith('### ')]
+    assert headings == ['### OMNIBUS — różnorodność', '### MARATOŃCZYK — aktywność', '### ARCYMISTRZ — skuteczność',
+                        '### Klasyfikacja generalna']
+    tallies = [d.value for d in at.dataframe if list(d.value.columns) == ['gracz', '🥇', '🥈', '🥉', 'razem']]
+    assert len(tallies) == 4
+    general = tallies[3].set_index('gracz')['razem']
+    parts = sum(t.set_index('gracz')['razem'].reindex(general.index, fill_value=0) for t in tallies[:3])
+    assert (parts == general).all()  # klasyfikacja generalna = suma trzech tytułów
+    champions = [d.value for d in at.dataframe if list(d.value.columns) == ['zdobywca tytułu']]
+    assert len(champions) == 4 and list(champions[0].index) == [2023, 2024, 2025]
