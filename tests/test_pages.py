@@ -7,7 +7,7 @@ from streamlit.testing.v1 import AppTest
 
 REPO = Path(__file__).resolve().parent.parent
 SNAPSHOT = REPO / 'tests' / 'baseline' / 'sheet_snapshot.csv'
-PAGES = ['main.py', 'pages/tabela.py', 'pages/ogolne.py', 'pages/gracz.py', 'pages/gra.py', 'pages/ranking_elo.py',
+PAGES = ['main.py', 'pages/tabela.py', 'pages/ogolne.py', 'pages/gracz.py', 'pages/gra.py', 'pages/siec.py', 'pages/ranking_elo.py',
          'pages/hall_of_fame.py', 'pages/wsjg.py', 'pages/program.py']
 
 _read_csv = pd.read_csv
@@ -321,3 +321,17 @@ def test_hall_of_fame_games_time_span():
     spans = (dates.max() - dates.min()).dt.days
     best = spans.idxmax()
     assert frames[1].loc['wszech czasów', 'gold'] == f'{best} ({spans[best]})'
+
+
+def test_network_page():
+    at = run('pages/siec.py')
+    assert not at.exception
+    players, games = (d.value for d in at.dataframe)
+    sheet = pd.read_csv(SNAPSHOT, index_col=0)
+    assert list(players.columns) == ['gracz', 'połączenia', 'partie'] and len(players) == 35
+    assert players['połączenia'].sum() == 2 * games['połączenia'].sum()
+    assert games['partie'].sum() == len(sheet)
+    widget_ = at.select_slider[0]
+    assert widget_.value == '6 mies.'
+    widget_.set_value('bez zaniku').run()
+    assert not at.exception

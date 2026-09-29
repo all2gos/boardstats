@@ -7,6 +7,7 @@ from stats import (game_counts, in_year, matches, player_game_counts, player_pla
                    season_distinct_games, season_game_counts, win_streaks, wsjg, wsjg_value, game_summary,
                    game_player_table, top_scores, best_scores, game_best_per_player, lowest_winning_score,
                    highest_losing_score, player_best_per_game, co_players, nemesis, nemesis_relative, nemesis_holders, nemesis_counts, is_mature, match_results, score_summary, scores_by_table_size, best_debut, game_player_counts, game_time_spans,
+                   pair_matches, edge_weights, player_connections, game_connections,
                    medal_table, medal_frame, distinct_co_players, group_counts,
                    streak_podium, distinct_games_won, record_holders, record_counts, table_sizes)
 from tests.fixtures import sheet
@@ -338,3 +339,35 @@ def test_game_time_spans_medals(long):
     assert spans.to_dict() == {'azul': 432, 'brass': 435, 'kaskadia': 0}
     assert medal_frame({'wszech czasów': spans}).loc['wszech czasów'].tolist() == [
         'brass (435)', 'azul (432)', 'kaskadia (0)']
+
+
+def test_pair_matches_and_edges(long):
+    pairs = pair_matches(long)
+    assert len(pairs) == 26  # 3 + 3 + 6 + 3 + 1 + 3 + 1 + 6
+    edges = edge_weights(pairs, now=pd.Timestamp(2024, 3, 20)).set_index(['gracz_a', 'gracz_b'])
+    # bez zaniku waga = liczba wspólnych partii (zgodnie z co_players)
+    assert edges['partie'].to_dict() == {('Bartek', 'Celina'): 6, ('Ania', 'Bartek'): 5, ('Ania', 'Celina'): 5,
+                                         ('Ania', 'Darek'): 4, ('Bartek', 'Darek'): 3, ('Celina', 'Darek'): 3}
+    assert (edges['waga'] == edges['partie']).all()
+    assert edges.loc[('Ania', 'Darek'), 'ostatnia'] == pd.Timestamp(2024, 3, 20)
+
+
+def test_edge_weights_decay(long):
+    now = pd.Timestamp(2024, 3, 20)
+    edges = edge_weights(pair_matches(long), now=now, half_life_days=182.5).set_index(['gracz_a', 'gracz_b'])
+    # Ania–Darek: m2 10.01.2023, m4 05.02.2023, m6 02.03.2024, m7 20.03.2024
+    ages = [(now - pd.Timestamp(d)).days for d in ('2023-01-10', '2023-02-05', '2024-03-02', '2024-03-20')]
+    assert edges.loc[('Ania', 'Darek'), 'waga'] == pytest.approx(sum(0.5 ** (a / 182.5) for a in ages))
+    assert edges.loc[('Ania', 'Darek'), 'partie'] == 4
+    # partia z dziś waży 1, sprzed pół roku 0.5
+    today = pd.DataFrame({'gracz_a': ['X', 'X'], 'gracz_b': ['Y', 'Y'], 'match_id': [0, 1],
+                          'date': [now, now - pd.Timedelta(days=182.5)], 'game': ['g', 'g']})
+    assert edge_weights(today, now, 182.5)['waga'].iloc[0] == pytest.approx(1.5)
+
+
+def test_player_and_game_connections(long):
+    players = player_connections(long)
+    assert players.values.tolist() == [['Ania', 14, 7], ['Bartek', 14, 6], ['Celina', 14, 6], ['Darek', 10, 5]]
+    games = game_connections(long)
+    assert games.values.tolist() == [['brass', 13, 3], ['azul', 9, 3], ['kaskadia', 4, 2]]
+    assert players['połączenia'].sum() == 2 * games['połączenia'].sum()  # każde połączenie ma dwa końce

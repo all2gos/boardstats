@@ -394,3 +394,43 @@ def game_time_spans(long_df):
     """Liczba dni między pierwszą a ostatnią partią każdej gry (Series gra -> dni)."""
     dates = long_df.groupby('game')['date']
     return (dates.max() - dates.min()).dt.days.rename_axis('gra')
+
+
+def pair_matches(long_df):
+    """Każda para graczy w każdej wspólnej partii: gracz_a, gracz_b (alfabetycznie), match_id, date, game."""
+    rows = []
+    for match_id, g in long_df.groupby('match_id'):
+        date, game = g['date'].iloc[0], g['game'].iloc[0]
+        rows.extend((a, b, match_id, date, game) for a, b in combinations(sorted(g['player']), 2))
+    return pd.DataFrame(rows, columns=['gracz_a', 'gracz_b', 'match_id', 'date', 'game'])
+
+
+def edge_weights(pairs, now, half_life_days=None):
+    """Krawędzie grafu współgraczy: gracz_a, gracz_b, partie, waga, ostatnia (data ostatniej wspólnej partii).
+
+    waga = suma po wspólnych partiach 0.5 ** (wiek w dniach / half_life_days); bez zaniku (None) waga = partie.
+    """
+    age = ((pd.Timestamp(now) - pairs['date']).dt.total_seconds() / 86400).clip(lower=0)
+    decay = 1.0 if half_life_days is None else 0.5 ** (age / half_life_days)
+    edges = pairs.assign(waga=decay).groupby(['gracz_a', 'gracz_b']).agg(
+        partie=('match_id', 'size'), waga=('waga', 'sum'), ostatnia=('date', 'max'))
+    return edges.reset_index().sort_values(['waga', 'gracz_a', 'gracz_b'], ascending=[False, True, True],
+                                           ignore_index=True)
+
+
+def player_connections(long_df):
+    """Połączenia gracza: każda partia z każdą inną osobą = 1 połączenie. Kolumny: gracz, połączenia, partie."""
+    sizes = long_df.groupby('match_id')['player'].transform('size')
+    table = long_df.assign(połączenia=sizes - 1).groupby('player').agg(
+        połączenia=('połączenia', 'sum'), partie=('match_id', 'size'))
+    table = table.reset_index().rename(columns={'player': 'gracz'})
+    return table.sort_values(['połączenia', 'gracz'], ascending=[False, True], ignore_index=True)
+
+
+def game_connections(long_df):
+    """Połączenia w grze: w każdej partii każda para uczestników = 1 połączenie. Kolumny: gra, połączenia, partie."""
+    sizes = long_df.groupby('match_id').agg(game=('game', 'first'), k=('player', 'size'))
+    sizes['połączenia'] = sizes['k'] * (sizes['k'] - 1) // 2
+    table = sizes.groupby('game').agg(połączenia=('połączenia', 'sum'), partie=('k', 'size'))
+    table = table.reset_index().rename(columns={'game': 'gra'})
+    return table.sort_values(['połączenia', 'gra'], ascending=[False, True], ignore_index=True)

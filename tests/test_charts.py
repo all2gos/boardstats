@@ -1,6 +1,7 @@
 import json
 
 import pandas as pd
+import pytest
 
 from charts import DASHES, PALETTE, REFERENCE_ELO, elo_chart, player_styles
 from data import player_columns
@@ -55,3 +56,55 @@ def test_chart_data_only_selected_players():
     s = spec(['Ania'])
     data = pd.DataFrame(s['datasets'][line_layer(s)['data']['name']])
     assert set(data['gracz']) == {'Ania'}
+
+
+def test_network_html():
+    from charts import VIS_NETWORK_JS, network_html
+    nodes = [{'id': 'Ania', 'label': 'Ania', 'value': 7, 'lines': ['Ania', '7 partii']},
+             {'id': 'Bartek', 'label': 'Bartek', 'value': 6, 'lines': ['Bartek', '6 partii']}]
+    edges = [{'from': 'Ania', 'to': 'Bartek', 'value': 2.5, 'lines': ['Ania — Bartek', '5 wspólnych partii']}]
+    html = network_html(nodes, edges, theme='dark')
+    assert VIS_NETWORK_JS in html and "'#3987e5'" in html  # akcent z ciemnej palety
+    assert '"Ania — Bartek"' in html and '"5 wspólnych partii"' in html  # polskie znaki bez escapowania
+    assert '"opacity": 0.9' in html  # najmocniejsza krawędź ma pełne krycie
+    assert "network.on('click'" in html  # panel na telefon
+
+
+def test_network_html_js_is_valid(tmp_path):
+    """Skrypt w wygenerowanym HTML musi się parsować (node --check), jeśli node jest dostępny."""
+    import re
+    import shutil
+    import subprocess
+    from charts import network_html
+    node = shutil.which('node')
+    if not node:
+        pytest.skip('brak node')
+    html = network_html([{'id': 'A', 'label': 'A', 'value': 1, 'lines': ['A', '1 partia']}], [], theme='light')
+    script = re.search(r'<script>(.*?)</script>', html, re.S).group(1)
+    (tmp_path / 'g.js').write_text(script, encoding='utf-8')
+    assert subprocess.run([node, '--check', str(tmp_path / 'g.js')], capture_output=True).returncode == 0
+
+
+def test_network_elements_on_snapshot_and_valid_js(tmp_path):
+    import re
+    import shutil
+    import subprocess
+    from pathlib import Path
+    from charts import network_elements, network_html
+    from data import parse_sheet, to_long
+    snapshot = Path(__file__).parent / 'baseline' / 'sheet_snapshot.csv'
+    long = to_long(parse_sheet(pd.read_csv(snapshot, index_col=0)))
+    nodes, edges = network_elements(long, now=pd.Timestamp(2026, 9, 27), half_life_days=182.62)
+    assert len(nodes) == 35 and all(len(n['lines']) >= 3 for n in nodes)
+    assert all(e['value'] > 0 and e['lines'][0].count(' — ') == 1 for e in edges)
+    node = shutil.which('node')
+    if node:
+        script = re.search(r'<script>(.*?)</script>', network_html(nodes, edges), re.S).group(1)
+        (tmp_path / 'g.js').write_text(script, encoding='utf-8')
+        assert subprocess.run([node, '--check', str(tmp_path / 'g.js')], capture_output=True).returncode == 0
+
+
+def test_network_html_escapes_script_end():
+    from charts import network_html
+    html = network_html([{'id': 'x', 'label': '</script><b>', 'value': 1, 'lines': ['</script>']}], [])
+    assert html.count('</script>') == 2  # tylko dwa prawdziwe znaczniki (biblioteka + nasz skrypt)
